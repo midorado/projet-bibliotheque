@@ -1,0 +1,33 @@
+
+public class Piste {
+	
+	private int numero;
+	private String titre;
+	private int duree; // Durée de la chanson en minute
+	
+	public Piste(int num, String titre, int duree) {
+		this.setNumero(num);
+		this.setTitre(titre);
+		this.setDuree(duree);
+	}
+
+	public int getNumero() {
+		return numero;
+	}
+	public void setNumero(int numero) {
+		this.numero = numero;
+	}
+	public String getTitre() {
+		return titre;
+	}
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+	public int getDuree() {
+		return duree;
+	}
+	public void setDuree(int duree) {
+		this.duree = duree;
+	}
+
+}
