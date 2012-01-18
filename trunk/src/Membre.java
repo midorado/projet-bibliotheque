@@ -11,9 +11,9 @@ public abstract class Membre {
 	private Date dateNaissance;
 	
 	public Membre(int identifiant, String nom, String prenom, Date dateNaiss) {
-		this.identifiant = identifiant;
-		this.nom = nom;
-		this.prenom = prenom;
+		this.setIdentifiant(identifiant);
+		this.setNom(nom);
+		this.setPrenom(prenom);
 		this.dateNaissance = dateNaiss;
 	}
 	
@@ -33,4 +33,31 @@ public abstract class Membre {
 	}
 	
 	public abstract float getTauxReduction();
+	
+	
+	/* Début getters & setters */
+	public int getIdentifiant() {
+		return identifiant;
+	}
+	public void setIdentifiant(int identifiant) {
+		this.identifiant = identifiant;
+	}
+	public String getNom() {
+		return nom;
+	}
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+	public String getPrenom() {
+		return prenom;
+	}
+	public void setPrenom(String prenom) {
+		this.prenom = prenom;
+	}
+	public Date getDateNaissance() {
+		return dateNaissance;
+	}
+	public void setDateNaissance(Date dateNaiss) {
+		this.dateNaissance = dateNaiss;
+	}
 }
