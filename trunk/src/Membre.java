@@ -34,7 +34,7 @@ public abstract class Membre {
 	public abstract float getTauxReduction();
 	
 	
-	/* Début getters & setters */
+	/* Dï¿½but getters & setters */
 	public int getIdentifiant() {
 		return identifiant;
 	}

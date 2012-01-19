@@ -6,7 +6,7 @@ public abstract class Media {
 	private String isbn;
 	private String auteur;
 	private String titre;
-	private Date dateParrution;
+	private Date dateParution;
 	private boolean empruntable;
 	
 	/**
@@ -14,13 +14,13 @@ public abstract class Media {
 	 * @param unIsbn
 	 * @param unAuteur
 	 * @param unTitre
-	 * @param uneDateParrution
+	 * @param uneDateParution
 	 */
-	public Media(String unIsbn, String unAuteur, String unTitre, Date uneDateParrution){
+	public Media(String unIsbn, String unAuteur, String unTitre, Date uneDateParution){
 		this.setIsbn(unIsbn);
 		this.setAuteur(unAuteur);
 		this.setTitre(unTitre);
-		this.setDateParrution(uneDateParrution);		
+		this.setDateParution(uneDateParution);		
 	}
 
 	public abstract float getPrix();
@@ -48,11 +48,11 @@ public abstract class Media {
 		this.titre = titre;
 	}
 
-	public Date getDateParrution() {
-		return dateParrution;
+	public Date getDateParution() {
+		return dateParution;
 	}
-	public void setDateParrution(Date dateParrution) {
-		this.dateParrution = dateParrution;
+	public void setDateParution(Date dateParrution) {
+		this.dateParution = dateParrution;
 	}
 	
 	public boolean isEmpruntable() {
