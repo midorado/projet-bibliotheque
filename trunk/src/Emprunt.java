@@ -34,19 +34,15 @@ public class Emprunt {
 	public void setMembre(Membre membre) {
 		this.membre = membre;
 	}
-
 	public Date getDateRetour() {
 		return dateRetour;
 	}
-
 	public void setDateRetour(Date dateRetour) {
 		this.dateRetour = dateRetour;
 	}
-
 	public Date getDateLimiteRetour() {
 		return dateLimiteRetour;
 	}
-
 	public void setDateLimiteRetour(Date dateLimiteRetour) {
 		this.dateLimiteRetour = dateLimiteRetour;
 	}
