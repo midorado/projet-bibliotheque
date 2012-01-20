@@ -12,34 +12,115 @@ import com.db4o.query.Query;
 
 public class Database {
 
-	private static ObjectContainer db = null;
-	private static EmbeddedConfiguration config;
+	private ObjectContainer db = null;
+	private EmbeddedConfiguration config;
 	
-	public static void openDatabase() {
+	/**
+	 * Configuration et ouverture de la base
+	 */
+	public void openDatabase() {
 		config = (EmbeddedConfiguration) Db4oEmbedded.newConfiguration();
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, "bibliotheque2.db4o");
+        db = Db4oEmbedded.openFile(config, "bibliotheque3.db4o");
 	}
 	
-	public static void closeDatabase() {
+	/**
+	 * Fermeture de la base
+	 */
+	public void closeDatabase() {
 		db.close();
 		db = null;
 	}
 	
-	public static void storeObject(Object o) {
+	public void storeObject(Object o) {
 		db.store(o);
-		db.commit();
 	}
 	
-	public static List<?> getList(Class<?> classQuery) {
+	public void updateObject(Object o) {
+		db.store(o);
+	}
+	
+	public void removeObject(Object o) {
+		db.delete(o);
+	}
+	
+	/**
+	 * R�cup�rer une liste d'objets en fonction de la classe
+	 * @param classQuery
+	 * @return
+	 */
+	public List<?> getList(Class<?> classQuery) {
 		return db.query(classQuery);
 	}
 	
-	public static Media getMediaByIsbn(final String isbn) {
+	/**
+	 * Recup�rer les emprunts termin�s ou en cours
+	 * @param enCours
+	 * @return
+	 */
+	public List<Emprunt> getEmprunts(final boolean enCours) {
+		List<Emprunt> result = db.query(new Predicate<Emprunt>() {
+			@Override
+			public boolean match(Emprunt e) {
+				if(enCours)
+					return e.isEnCours();
+				else
+					return !e.isEnCours();
+			}
+		});
+		
+		return result;
+	}
+	
+	/**
+	 * Retourne un Emprunt en fonction de l'isbn du Media et de l'identifiant du Membre
+	 * @param isbn
+	 * @param id
+	 * @return
+	 */
+	public Emprunt getEmprunt(final String isbn, final int id) {
+		ObjectSet<Emprunt> result = db.query(new Predicate<Emprunt>() {
+			@Override
+			public boolean match(Emprunt e) {
+				return e.getMedia().getIsbn().equals(isbn) && e.getMembre().getIdentifiant() == id;
+			}
+		});
+		
+		if(!result.isEmpty())
+			return result.get(0);
+		else
+			return null;
+	}
+	
+	/**
+	 * Retourne un Media en fonction de son isbn
+	 * @param isbn
+	 * @return
+	 */
+	public Media getMediaByIsbn(final String isbn) {
 		ObjectSet<Media> result = db.query(new Predicate<Media>() {
 			@Override
 			public boolean match(Media m) {
 				return m.getIsbn().equals(isbn);
+			}
+		});
+		
+		if(!result.isEmpty())
+			return result.get(0);
+		else
+			return null;
+	}
+	
+	/**
+	 * Retourne un Membre en fonction de son identifiant
+	 * @param id
+	 * @return
+	 */
+	public Membre getMembreById(final int id) {
+		ObjectSet<Membre> result = db.query(new Predicate<Membre>() {
+			@Override
+			public boolean match(Membre m) {
+				return m.getIdentifiant() == id;
 			}
 		});
 		

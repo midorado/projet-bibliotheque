@@ -6,8 +6,17 @@ public class CoffretDvd extends AudioVisuel {
 
 	private List<Dvd> dvds;
 		
-	public CoffretDvd(String unIsbn, String unAuteur, String unTitre, Date uneDateParrution, int uneDuree, List listeDvds) {
-		super(unIsbn, unAuteur, unTitre, uneDateParrution, uneDuree);
+	public CoffretDvd(String unIsbn, String unAuteur, String unTitre, Date uneDateParrution, List<Dvd> listeDvds) {
+		super(unIsbn, unAuteur, unTitre, uneDateParrution, 0);
+		
+		// Durée de tout les dvd du coffret
+		int dureeTotale = 0;
+		for(Dvd d : getDvds()) {
+			dureeTotale += d.getDuree();
+		}
+
+		this.setDuree(dureeTotale);
+
 		this.dvds = listeDvds;
 	}
 

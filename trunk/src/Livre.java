@@ -3,9 +3,9 @@ import java.util.Date;
 
 public class Livre extends Litteraire {
 
-	public Livre(String unIsbn, String unAuteur, String unTitre, float unPrix,
+	public Livre(String unIsbn, String unAuteur, String unTitre,
 			Date uneDateParrution, int unNbPages) {
-		super(unIsbn, unAuteur, unTitre, unPrix, uneDateParrution, unNbPages);
+		super(unIsbn, unAuteur, unTitre, uneDateParrution, unNbPages);
 		// TODO Auto-generated constructor stub
 	}
 
