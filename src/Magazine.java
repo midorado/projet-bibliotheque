@@ -6,8 +6,8 @@ public class Magazine extends Litteraire {
 	private String modeParution;
 	
 	public Magazine(String unIsbn, String unAuteur, String unTitre,
-			float unPrix, Date uneDateParrution, int unNbPages, String unModeParution) {
-		super(unIsbn, unAuteur, unTitre, unPrix, uneDateParrution, unNbPages);
+			Date uneDateParrution, int unNbPages, String unModeParution) {
+		super(unIsbn, unAuteur, unTitre, uneDateParrution, unNbPages);
 		
 		this.setModeParution(unModeParution);
 	}

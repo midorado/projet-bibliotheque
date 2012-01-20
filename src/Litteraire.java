@@ -6,7 +6,7 @@ public abstract class Litteraire extends Media {
 	private int nbPages;
 	private float prixPage;
 	
-	public Litteraire(String unIsbn, String unAuteur, String unTitre, float unPrix, Date uneDateParrution, int unNbPages){
+	public Litteraire(String unIsbn, String unAuteur, String unTitre, Date uneDateParrution, int unNbPages){
 		super(unIsbn, unAuteur, unTitre, uneDateParrution);
 		this.setNbPages(unNbPages);
 	}
