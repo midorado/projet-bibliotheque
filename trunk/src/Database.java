@@ -21,7 +21,9 @@ public class Database {
 	public void openDatabase() {
 		config = (EmbeddedConfiguration) Db4oEmbedded.newConfiguration();
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, "bibliotheque3.db4o");
+        config.common().objectClass(Membre.class).cascadeOnUpdate(true);
+        config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
+        db = Db4oEmbedded.openFile(config, "bibliotheque715.db4o");
 	}
 	
 	/**

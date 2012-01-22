@@ -2,16 +2,19 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class UIConsole {
 	
-	private static Scanner sc = new Scanner(System.in);
+	private Scanner sc = new Scanner(System.in);
 	
-	public static void menuPrincipal() {
+	public void start() {
+		this.menuPrincipal();
+	}
+	
+	private void menuPrincipal() {
 		clearConsole();
 		
 		int choix = -1;
@@ -42,7 +45,7 @@ public class UIConsole {
 		}
 	}
 	
-	private static void menuEmprunts() {
+	private void menuEmprunts() {
 		clearConsole();
 		
 		int choix = -1;
@@ -76,7 +79,7 @@ public class UIConsole {
 		}
 	}
 
-	private static void menuMedias() {
+	private void menuMedias() {
 		clearConsole();
 
 		int choix = -1;
@@ -89,7 +92,8 @@ public class UIConsole {
 			System.out.println("Que voulez-vous faire ?");
 			System.out.println("1 - Ajouter un media");
 			System.out.println("2 - Supprimer un media");
-			System.out.println("3 - Retour au menu principal");
+			System.out.println("3 - Lister les médias");
+			System.out.println("4 - Retour au menu principal");
 			System.out.println("0 - Quitter");
 			choix = sc.nextInt();
 		}
@@ -102,12 +106,14 @@ public class UIConsole {
 				break;
 			case 2: menuSupprimerMedia();
 				break;
-			case 3: menuPrincipal();
+			case 3: menuListerMedias();
+				break;
+			case 4: menuPrincipal();
 				break;
 		}
 	}
 
-	private static void menuMembres() {
+	private void menuMembres() {
 		clearConsole();
 
 		int choix = -1;
@@ -138,7 +144,7 @@ public class UIConsole {
 		}
 	}
 	
-	private static void menuTerminerEmprunt() {
+	private void menuTerminerEmprunt() {
 		clearConsole();
 
 		String isbn;
@@ -149,25 +155,45 @@ public class UIConsole {
 		System.out.println("***********************************************");
 		
 		System.out.print("ISBN du media : ");
-		isbn = sc.nextLine();
+		isbn = sc.next();
 		System.out.print("\nIdentifiant du membre : ");
 		idMembre = sc.nextInt();
 
-		Bibliotheque.terminerEmprunt(Bibliotheque.getEmprunt(isbn, idMembre));
-		System.out.println();
+		//Bibliotheque.terminerEmprunt(Bibliotheque.getEmprunt(isbn, idMembre));
+		
+		System.out.println("L'emprunt est terminé");
+		
+		menuEmprunts();
 	}
 
-	private static void menuNouvelEmprunt() {
+	private void menuNouvelEmprunt() {
+		clearConsole();
+
+		String isbn;
+		int idMembre;
+		
+		System.out.println("***********************************************");
+		System.out.println("*************** Nouvel emprunt ****************");
+		System.out.println("***********************************************");
+		
+		System.out.print("ISBN du media : ");
+		isbn = sc.next();
+		System.out.print("Identifiant du membre : ");
+		idMembre = sc.nextInt();
+
+		Bibliotheque.nouvelEmprunt(isbn, idMembre);
+		
+		System.out.println("Nouvel emprunt effectué");
+		
+		menuEmprunts();
+	}
+	
+	private void menuListeEmpruntsEnCours() {
 		// TODO Auto-generated method stub
 		
 	}
 	
-	private static void menuListeEmpruntsEnCours() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	private static void menuAjoutMedia() {
+	private void menuAjoutMedia() {
 		clearConsole();
 		
 		int choix = -1;
@@ -201,7 +227,9 @@ public class UIConsole {
 		}
 	}
 	
-	private static void menuSupprimerMedia() {
+	private void menuSupprimerMedia() {
+		clearConsole();
+		
 		System.out.println("***********************************************");
 		System.out.println("************** Supprimer un media *************");
 		System.out.println("***********************************************");
@@ -209,7 +237,7 @@ public class UIConsole {
 		String isbn;
 		
 		System.out.println("ISBN du média à supprimer : ");
-		isbn = sc.nextLine();
+		isbn = sc.next();
 		
 		Bibliotheque.delMedia(isbn);
 		
@@ -218,7 +246,24 @@ public class UIConsole {
 		menuMedias(); // On retourne à l'étape précédente
 	}
 	
-	private static void ajoutMediaLitteraire() {
+	private void menuListerMedias() {
+		clearConsole();
+		
+		System.out.println("***********************************************");
+		System.out.println("************** Lister les medias **************");
+		System.out.println("***********************************************");
+		
+		List<Media> medias = Bibliotheque.getListMedias();
+		
+		for(Media m : medias) {
+			System.out.println("ISBN : "+m.getIsbn()+" | Titre : "+m.getTitre()+" | Auteur : "+m.getAuteur());
+			System.out.println("Date de parution : "+m.getDateParution()+" | Prix : "+m.getPrix());
+		}
+		
+		menuMedias();
+	}
+	
+	private void ajoutMediaLitteraire() {
 		clearConsole();
 		
 		System.out.println("***********************************************");
@@ -244,19 +289,18 @@ public class UIConsole {
 		
 		if(choix > 0 && choix < 3) {
 			System.out.print("ISBN : ");
-			isbn = sc.nextLine();
-			System.out.print("\nAuteur : ");
-			auteur = sc.nextLine();
-			System.out.print("\nTitre : ");
-			titre = sc.nextLine();
-			System.out.print("\nDate de parution (JJ/MM/AAAA) : ");
+			isbn = sc.next();
+			System.out.print("Auteur : ");
+			auteur = sc.next();
+			System.out.print("Titre : ");
+			titre = sc.next();
+			System.out.print("Date de parution (JJ/MM/AAAA) : ");
 			try {
-				dateParution = stringToDate(sc.nextLine());
+				dateParution = stringToDate(sc.next());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.print("\nNombre de pages : ");
+			System.out.print("Nombre de pages : ");
 			nbPages = sc.nextInt();
 		}
 		
@@ -264,8 +308,8 @@ public class UIConsole {
 			case 0: Bibliotheque.closeBibliotheque();
 				break;
 			case 1: String modeParution;
-					System.out.print("\nMode de parution (mensuel, hebdomadaire...)");
-					modeParution = sc.nextLine();
+					System.out.print("Mode de parution (mensuel, hebdomadaire...)");
+					modeParution = sc.next();
 					media = (Magazine) new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution);
 				break;
 			case 2: media = (Livre) new Livre(isbn, auteur, titre, dateParution, nbPages);
@@ -276,13 +320,13 @@ public class UIConsole {
 
 		if(media != null) {
 			Bibliotheque.addMedia(media);
-			System.out.println("\nLe media "+titre+" a bien été ajouté");
+			System.out.println("Le media "+titre+" a bien été ajouté");
 		}
 		
 		menuMedias(); // On retourne à l'étape précédente
 	}
 	
-	private static void ajoutMediaAudioVisuel() {
+	private void ajoutMediaAudioVisuel() {
 		clearConsole();
 		
 		System.out.println("***********************************************");
@@ -308,16 +352,15 @@ public class UIConsole {
 
 		if(choix > 0 && choix < 4) {
 			System.out.print("ISBN : ");
-			isbn = sc.nextLine();
-			System.out.print("\nAuteur : ");
-			auteur = sc.nextLine();
-			System.out.print("\nTitre : ");
-			titre = sc.nextLine();
-			System.out.print("\nDate de parution (JJ/MM/AAAA) : ");
+			isbn = sc.next();
+			System.out.print("Auteur : ");
+			auteur = sc.next();
+			System.out.print("Titre : ");
+			titre = sc.next();
+			System.out.print("Date de parution (JJ/MM/AAAA) : ");
 			try {
-				dateParution = stringToDate(sc.nextLine());
+				dateParution = stringToDate(sc.next());
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -328,7 +371,7 @@ public class UIConsole {
 			case 1: List<Piste> pistes = menuPistes();
 					media = (Cd) new Cd(isbn, auteur, titre, dateParution, pistes);
 				break;
-			case 2: System.out.print("\nDurée : ");
+			case 2: System.out.print("Durée : ");
 					int duree = sc.nextInt();
 					media = (Dvd) new Dvd(isbn, auteur, titre, dateParution, duree);
 				break;
@@ -347,7 +390,7 @@ public class UIConsole {
 		menuMedias(); // On retourne à l'étape précédente
 	}
 	
-	private static List<Piste> menuPistes() {
+	private List<Piste> menuPistes() {
 		clearConsole();
 		
 		System.out.println("***********************************************");
@@ -362,15 +405,15 @@ public class UIConsole {
 		do {
 			System.out.print("Numéro : ");
 			numero = sc.nextInt();
-			System.out.print("\nTitre : ");
-			titre = sc.nextLine();
-			System.out.print("\nDurée (en seconde) : ");
+			System.out.print("Titre : ");
+			titre = sc.next();
+			System.out.print("Durée (en seconde) : ");
 			duree = sc.nextInt();
 			
 			Piste p = new Piste(numero, titre, duree);
 			pistes.add(p);
 			
-			System.out.print("\nVoulez-vous ajouter d'autres pistes ? ");
+			System.out.print("Voulez-vous ajouter d'autres pistes ? ");
 			continuer = sc.nextBoolean();
 		}
 		while(continuer);
@@ -378,7 +421,7 @@ public class UIConsole {
 		return pistes;
 	}
 	
-	private static List<Dvd> menuDvds() {
+	private List<Dvd> menuDvds() {
 		clearConsole();
 		
 		System.out.println("***********************************************");
@@ -393,18 +436,18 @@ public class UIConsole {
 		
 		do {
 			System.out.print("ISBN : ");
-			isbn = sc.nextLine();
-			System.out.print("\nTitre : ");
-			titre = sc.nextLine();
-			System.out.print("\nRéalisateur : ");
-			auteur = sc.nextLine();
-			System.out.print("\nDate de parution (JJ/MM/AAAA) : ");
+			isbn = sc.next();
+			System.out.print("Titre : ");
+			titre = sc.next();
+			System.out.print("Réalisateur : ");
+			auteur = sc.next();
+			System.out.print("Date de parution (JJ/MM/AAAA) : ");
 			try {
-				dateParution = stringToDate(sc.nextLine());
+				dateParution = stringToDate(sc.next());
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			System.out.print("\nDurée (en seconde) : ");
+			System.out.print("Durée (en seconde) : ");
 			duree = sc.nextInt();
 			
 			Dvd d = new Dvd(isbn, auteur, titre, dateParution, duree);
@@ -418,27 +461,114 @@ public class UIConsole {
 		return dvds;
 	}
 	
-	private static void ajoutAudioLivre() {
+	private void ajoutAudioLivre() {
+		clearConsole();
 		
+		System.out.println("***********************************************");
+		System.out.println("*********** Ajouter un audiolivre *************");
+		System.out.println("***********************************************");
+
+		String isbn, auteur, titre;
+		Date dateParution = null;
+		int nbPages;
+		
+		System.out.print("ISBN : ");
+		isbn = sc.next();
+		System.out.print("Titre : ");
+		titre = sc.next();
+		System.out.print("Auteur : ");
+		auteur = sc.next();
+		System.out.print("Date de parution (JJ/MM/AAAA) : ");
+		try {
+			dateParution = stringToDate(sc.next());
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		System.out.print("Nombre de pages : ");
+		nbPages = sc.nextInt();
+		List<Piste> pistes = menuPistes(); // Ouverture du menu d'ajout de pistes audio
+		
+		AudioLivre audiolivre = new AudioLivre(isbn, auteur, titre, dateParution, nbPages, pistes);
+		
+		Bibliotheque.addMedia(audiolivre);
+		
+		System.out.println("Le media "+titre+" a bien été ajouté");
+		
+		menuMedias(); // Retour à l'étape précédente
 	}
 	
-	private static void menuAjoutMembre() {
-		// TODO Auto-generated method stub
+	private void menuAjoutMembre() {
+		clearConsole();
 		
+		int choix = -1;
+		
+		System.out.println("***********************************************");
+		System.out.println("************* Ajouter un membre ***************");
+		System.out.println("***********************************************");
+		
+		do {
+			System.out.println("Voulez-vous ajouter un membre du personnel ou un abonné ?");
+			System.out.println("1 - Personnel");
+			System.out.println("2 - Abonné");
+			System.out.println("3 - Retour à la gestion des membres");
+			System.out.println("0 - Quitter");
+			choix = sc.nextInt();
+		}
+		while(choix < 0 || choix > 3);
+		
+		Membre membre = null;
+		//int id = Bibliotheque.getNouvelIdMembre();
+		int id = 0;
+		String nom = null, prenom = null;
+		Date dateNaiss = null;
+		
+		if(choix > 0 && choix < 3) {
+			System.out.print("Nom : ");
+			nom = sc.next();
+			System.out.print("Prénom : ");
+			prenom = sc.next();
+			System.out.print("Date de naissance : ");
+			try {
+				dateNaiss = stringToDate(sc.next());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		switch(choix) {
+			case 0: Bibliotheque.closeBibliotheque();
+				break;
+			case 1: System.out.println("Poste : ");
+					String poste = sc.next();
+					membre = new Personnel(id, nom, prenom, dateNaiss, poste);
+				break;
+			case 2: membre = new Abonne(id, nom, prenom, dateNaiss);
+				break;
+			case 3: menuMedias();
+				break;
+		}
+		
+		Bibliotheque.addMembre(membre);
+		
+		System.out.println(prenom+" "+nom+" a bien été ajouté");
+		
+		menuMembres();
 	}
 	
-	private static void menuSupprimerMembre() {
-		// TODO Auto-generated method stub
+	private void menuSupprimerMembre() {
+		clearConsole();
+
+		System.out.println("***********************************************");
+		System.out.println("************ Supprimer un membre **************");
+		System.out.println("***********************************************");
 		
 	}
 
-	
-
-	private static void clearConsole() {
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	private void clearConsole() {
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
-	private static Date stringToDate(String date) throws ParseException {
+	private Date stringToDate(String date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		return formatter.parse(date);
 	}
