@@ -10,7 +10,8 @@ public class Main {
 
 	    Bibliotheque.initBibliotheque(); // Initialise le contrôleur et la base de données
 	     
-	 //   UIConsole.menuPrincipal(); // Lancement de l'interface utilisateur
+	    UIConsole ui = new UIConsole();
+	    ui.start(); // Lancement de l'interface utilisateur
 	     
 	    Bibliotheque.closeBibliotheque(); // Execute les sauvegardes et ferme la base
      

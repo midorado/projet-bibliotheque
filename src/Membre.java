@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 
 public abstract class Membre {
@@ -8,12 +10,14 @@ public abstract class Membre {
 	private String nom;
 	private String prenom;
 	private Date dateNaissance;
+	private List<Emprunt> emprunts;
 	
 	public Membre(int identifiant, String nom, String prenom, Date dateNaiss) {
 		this.setIdentifiant(identifiant);
 		this.setNom(nom);
 		this.setPrenom(prenom);
-		this.dateNaissance = dateNaiss;
+		this.setDateNaissance(dateNaiss);
+		this.setEmprunts(new ArrayList<Emprunt>());
 	}
 	
 	public int getAge() {
@@ -58,5 +62,14 @@ public abstract class Membre {
 	}
 	public void setDateNaissance(Date dateNaiss) {
 		this.dateNaissance = dateNaiss;
+	}
+	public List<Emprunt> getEmprunts() {
+		return emprunts;
+	}
+	public void setEmprunts(List<Emprunt> mesEmprunts) {
+		this.emprunts = mesEmprunts;
+	}
+	public void addEmprunt(Emprunt e) {
+		this.emprunts.add(e);
 	}
 }

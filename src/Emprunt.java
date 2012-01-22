@@ -8,8 +8,7 @@ public class Emprunt {
 	private Date dateLimiteRetour;
 	private Media media;
 	private Membre membre;
-	private boolean enCours;
-	// Si le media n'a pas encore été rendu à la bibliothèque
+	private boolean enCours; // Si le media n'a pas encore été rendu à la bibliothèque
 	
 	public Emprunt(Media med, Membre mb) {
 		this.setDateEmprunt(new Date());

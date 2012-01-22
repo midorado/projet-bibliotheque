@@ -4,7 +4,6 @@ import java.util.Date;
 public abstract class Litteraire extends Media {
 
 	private int nbPages;
-	private float prixPage;
 	
 	public Litteraire(String unIsbn, String unAuteur, String unTitre, Date uneDateParrution, int unNbPages){
 		super(unIsbn, unAuteur, unTitre, uneDateParrution);
@@ -18,13 +17,6 @@ public abstract class Litteraire extends Media {
 	}
 	public void setNbPages(int nbPages) {
 		this.nbPages = nbPages;
-	}
-	
-	public float getPrixPage() {
-		return prixPage;
-	}
-	public void setPrixPage(float prixPage) {
-		this.prixPage = prixPage;
 	}
 	
 	/* ****************Fin Get Set******************* */
