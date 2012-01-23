@@ -85,7 +85,7 @@ public class UIConsole {
 		int choix = -1;
 		
 		System.out.println("***********************************************");
-		System.out.println("************* Gestion des medias *************");
+		System.out.println("************* Gestion des medias **************");
 		System.out.println("***********************************************");
 		
 		do {
@@ -126,7 +126,8 @@ public class UIConsole {
 			System.out.println("Que voulez-vous faire ?");
 			System.out.println("1 - Ajouter un membre");
 			System.out.println("2 - Supprimer un membre");
-			System.out.println("3 - Retour au menu principal");
+			System.out.println("3 - Lister les membres");
+			System.out.println("4 - Retour au menu principal");
 			System.out.println("0 - Quitter");
 			choix = sc.nextInt();
 		}
@@ -139,7 +140,9 @@ public class UIConsole {
 				break;
 			case 2: menuSupprimerMembre();
 				break;
-			case 3: menuPrincipal();
+			case 3: menuListerMembres();
+				break;
+			case 4: menuPrincipal();
 				break;
 		}
 	}
@@ -564,8 +567,23 @@ public class UIConsole {
 		
 	}
 
+	private void menuListerMembres() {
+		clearConsole();
+
+		System.out.println("***********************************************");
+		System.out.println("************* Lister les membres **************");
+		System.out.println("***********************************************");
+		
+		for(Membre m : Bibliotheque.getListMembres()) {
+			System.out.println("Membre n°"+m.getIdentifiant());
+			System.out.println(m.getPrenom()+" "+m.getNom());
+			System.out.println(m.getDateNaissance().toString()+"\n");
+			
+		}
+	}
+	
 	private void clearConsole() {
-		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+	//	System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	}
 	
 	private Date stringToDate(String date) throws ParseException {

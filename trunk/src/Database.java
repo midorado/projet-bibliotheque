@@ -4,10 +4,7 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.ext.DatabaseClosedException;
-import com.db4o.ext.Db4oException;
 import com.db4o.query.Predicate;
-import com.db4o.query.Query;
 
 
 public class Database {
@@ -23,7 +20,7 @@ public class Database {
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
         config.common().objectClass(Membre.class).cascadeOnUpdate(true);
         config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, "bibliotheque715.db4o");
+        db = Db4oEmbedded.openFile(config, "bibliotheque515d55.db4o");
 	}
 	
 	/**
