@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,46 +11,24 @@ public class Bibliotheque {
 
 	private static Database db;
 	
-	private static List<Membre> listMembres;
-	private static List<Media> listMedias;
-//	private static List<Emprunt> listEmpruntsTermine;
-//	private static List<Emprunt> listEmpruntsEnCours;
-	
 	public static void initBibliotheque() {
-		
 		db = new Database();
 		db.openDatabase();
-		
-	//	listMembres = new ArrayList<Membre>();
-	//	listMedias = new ArrayList<Media>();
-	//	listEmpruntsTermine = new ArrayList<Emprunt>();
-	//	listEmpruntsEnCours = new ArrayList<Emprunt>();
-		
-		listMembres = (List<Membre>) db.getList(Membre.class);
-		listMedias = (List<Media>) db.getList(Media.class);
-	//	listEmpruntsTermine = db.getEmprunts(false);
-	//	listEmpruntsEnCours = db.getEmprunts(true);
 	}
-	
-	public static void updateBibliotheque() {
-		db.updateObject(listMembres);
-		db.updateObject(listMedias);
-		//db.updateObject(listEmpruntsTermine);
-		//db.updateObject(listEmpruntsEnCours);
-	}
-	
+
 	public static void closeBibliotheque() {
 		System.out.println("Fermeture du programme en cours...");
-		updateBibliotheque();
 		db.closeDatabase();
 		System.exit(0);
 	}
 	
 	public static void addMembre(Membre m) {
-		listMembres.add(m);
+		db.storeObject(m);
 	}
 	
 	public static Membre getMembreById(int id) {
+		List<Membre> listMembres = (List<Membre>) db.getList(Membre.class);
+		
 		for(Membre m : listMembres) {
 			if(m.getIdentifiant() == id) {
 				return m;
@@ -59,38 +38,33 @@ public class Bibliotheque {
 	}
 	
 	public static void addMedia(Media m) {
-		listMedias.add(m);
+		db.storeObject(m);
 	}
 	
-	public static boolean delMedia(String isbn) {
-		
-		for(Media m : listMedias) {
-			if(m.getIsbn().equals(isbn)) {
-				listMedias.remove(m);
-				return true;
-			}
-		}
-		
-		return false;
+	public static void delMedia(String isbn) {
+		db.removeObject(db.getMediaByIsbn(isbn));
 	}
 	
 	public static Media getMediaByIsbn(String isbn) {
-		for(Media m : listMedias) {
-			if(m.getIsbn().equals(isbn)) {
-				return m;
-			}
-		}
-		return null;
+		return db.getMediaByIsbn(isbn);
 	}
 	
 /*	public static void addEmprunt(Emprunt e) {
 		listEmpruntsEnCours.add(e);
 	}
 */	
-	public static void nouvelEmprunt(String isbn, int memberId) {
-		Membre m = getMembreById(memberId);
-		Emprunt e = new Emprunt(getMediaByIsbn(isbn), m);
-		m.addEmprunt(e);
+	public static boolean nouvelEmprunt(String isbn, int memberId) {
+		Membre mb = getMembreById(memberId);
+		Media med = getMediaByIsbn(isbn);
+		
+		if(mb == null || med == null) 
+			return false;
+		
+		Emprunt e = new Emprunt(med,mb);
+		mb.addEmprunt(e);
+		db.updateObject(mb); // On met à jour le Membre avec son nouvel emprunt
+	
+		return true;
 	}
 	
 /*	public static void terminerEmprunt(Emprunt e) {
@@ -98,20 +72,17 @@ public class Bibliotheque {
 		e.setEnCours(false);
 		listEmpruntsTermine.add(e);
 	}
-*/	
-	public static Emprunt getEmprunt(String isbn, int id) {
-		
-		Emprunt e = db.getEmprunt(isbn, id);
-
-		return e;		
+*/
+	public static Emprunt getEmprunt(String isbn, int id) {	
+		return db.getEmprunt(isbn, id);	
 	}
 	
 	public static int getNouvelIdMembre() {
-		return listMembres.size() + 1;
+		return db.getList(Membre.class).size() + 1;
 	}
 	
 	public static List<Membre> getListMembres() {
-		return listMembres;
+		return (List<Membre>) db.getList(Membre.class);
 	}
 	
 	public static List<Membre> getListPersonnels() {
@@ -123,6 +94,6 @@ public class Bibliotheque {
 	}
 	
 	public static List<Media> getListMedias() {
-		return listMedias;
+		return (List<Media>) db.getList(Media.class);
 	}
 }
