@@ -1,9 +1,10 @@
+package modÃ¨le;
 
 public class Piste {
 	
 	private int numero;
 	private String titre;
-	private int duree; // Durée de la chanson en seconde
+	private int duree; // Durï¿½e de la chanson en seconde
 	
 	public Piste(int num, String titre, int duree) {
 		this.setNumero(num);

@@ -1,9 +1,26 @@
+package vue;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+
+import controleur.Bibliotheque;
+
+import modèle.Abonne;
+import modèle.AudioLivre;
+import modèle.Cd;
+import modèle.CoffretDvd;
+import modèle.Dvd;
+import modèle.Emprunt;
+import modèle.Livre;
+import modèle.Magazine;
+import modèle.Media;
+import modèle.Membre;
+import modèle.Personnel;
+import modèle.Piste;
 
 
 public class UIConsole {

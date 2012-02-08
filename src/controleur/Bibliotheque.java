@@ -1,6 +1,13 @@
+package controleur;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import modèle.Database;
+import modèle.Emprunt;
+import modèle.Media;
+import modèle.Membre;
 
 /**
  * 
