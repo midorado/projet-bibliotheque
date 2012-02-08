@@ -1,3 +1,4 @@
+package modèle;
 import java.util.Date;
 
 
@@ -11,7 +12,6 @@ public class Emprunt {
 	
 	public Emprunt(Media med, Membre mb) {
 		this.setDateEmprunt(new Date());
-		
 		this.setMedia(med);
 		this.setMembre(mb);
 	}
