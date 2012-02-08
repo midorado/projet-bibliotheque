@@ -11,6 +11,7 @@ public class Database {
 
 	private ObjectContainer db = null;
 	private EmbeddedConfiguration config;
+	private static final String PATH_DATABASE = "bibliotheque001.db4o";
 	
 	/**
 	 * Configuration et ouverture de la base
@@ -20,7 +21,7 @@ public class Database {
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
         config.common().objectClass(Membre.class).cascadeOnUpdate(true);
         config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, "bibliotheque515d55.db4o");
+        db = Db4oEmbedded.openFile(config, PATH_DATABASE);
 	}
 	
 	/**
@@ -61,10 +62,7 @@ public class Database {
 		List<Emprunt> result = db.query(new Predicate<Emprunt>() {
 			@Override
 			public boolean match(Emprunt e) {
-				if(enCours)
-					return e.isEnCours();
-				else
-					return !e.isEnCours();
+				return enCours ? e.isEnCours() : !e.isEnCours();
 			}
 		});
 		

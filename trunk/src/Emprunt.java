@@ -8,10 +8,10 @@ public class Emprunt {
 	private Date dateLimiteRetour;
 	private Media media;
 	private Membre membre;
-	private boolean enCours; // Si le media n'a pas encore été rendu à la bibliothèque
 	
 	public Emprunt(Media med, Membre mb) {
 		this.setDateEmprunt(new Date());
+		
 		this.setMedia(med);
 		this.setMembre(mb);
 	}
@@ -48,10 +48,7 @@ public class Emprunt {
 		this.dateLimiteRetour = dateLimiteRetour;
 	}
 	public boolean isEnCours() {
-		return enCours;
-	}
-	public void setEnCours(boolean enCours) {
-		this.enCours = enCours;
+		return (dateRetour == null);
 	}
 
 }
