@@ -17,8 +17,9 @@ public class Bibliotheque {
 	}
 
 	public static void closeBibliotheque() {
-		System.out.println("Fermeture du programme en cours...");
+		System.out.print("Fermeture du programme en cours...");
 		db.closeDatabase();
+		System.out.println(" Ok !");
 		System.exit(0);
 	}
 	
@@ -62,8 +63,10 @@ public class Bibliotheque {
 		
 		Emprunt e = new Emprunt(med,mb);
 		mb.addEmprunt(e);
+		
 		db.updateObject(mb); // On met à jour le Membre avec son nouvel emprunt
-	
+		db.storeObject(e);
+		
 		return true;
 	}
 	
@@ -73,6 +76,14 @@ public class Bibliotheque {
 		listEmpruntsTermine.add(e);
 	}
 */
+	public static boolean mediaExists(String isbn) {
+		return (db.getMediaByIsbn(isbn) != null);
+	}
+	
+	public static boolean membreExists(int id) {
+		return (db.getMembreById(id) != null);
+	}
+
 	public static Emprunt getEmprunt(String isbn, int id) {	
 		return db.getEmprunt(isbn, id);	
 	}
@@ -95,5 +106,13 @@ public class Bibliotheque {
 	
 	public static List<Media> getListMedias() {
 		return (List<Media>) db.getList(Media.class);
+	}
+	
+	public static List<Emprunt> getListEmpruntsEnCours() {
+		return db.getEmprunts(true);
+	}
+	
+	public static List<Emprunt> getListEmpruntsTermines() {
+		return db.getEmprunts(false);
 	}
 }
