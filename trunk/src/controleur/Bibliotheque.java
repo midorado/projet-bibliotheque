@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import modèle.AudioLivre;
 import modèle.Database;
 import modèle.Emprunt;
 import modèle.Media;
@@ -122,4 +123,9 @@ public class Bibliotheque {
 	public static List<Emprunt> getListEmpruntsTermines() {
 		return db.getEmprunts(false);
 	}
+	
+	public static List<AudioLivre> getListAudioLivre(){
+		return (List<AudioLivre>) db.getList(AudioLivre.class);
+	}
+
 }
