@@ -21,12 +21,10 @@ public class Bibliotheque {
 	
 	public static void initBibliotheque() {
 		db = new Database();
-		db.openDatabase();
 	}
 
 	public static void closeBibliotheque() {
 		System.out.print("Fermeture du programme en cours...");
-		db.closeDatabase();
 		System.out.println(" Ok !");
 		System.exit(0);
 	}
@@ -59,9 +57,9 @@ public class Bibliotheque {
 	}
 	
 /*	public static void addEmprunt(Emprunt e) {
-		listEmpruntsEnCours.add(e);
+		db.storeObject(e);
 	}
-*/	
+*/
 	public static boolean nouvelEmprunt(String isbn, int memberId) {
 		Membre mb = getMembreById(memberId);
 		Media med = getMediaByIsbn(isbn);
