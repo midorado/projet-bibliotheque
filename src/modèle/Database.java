@@ -19,32 +19,38 @@ public class Database {
 	/**
 	 * Configuration et ouverture de la base
 	 */
-	public void openDatabase() {
+	private void openDatabase() {
 		config = (EmbeddedConfiguration) Db4oEmbedded.newConfiguration();
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
         config.common().objectClass(Membre.class).cascadeOnUpdate(true);
         config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, PATH_DATABASE);
+        db = Db4oEmbedded.openFile(config, PATH_DATABASE); // Ouvre ou cré et ouvre la base
 	}
 	
 	/**
 	 * Fermeture de la base
 	 */
-	public void closeDatabase() {
+	private void closeDatabase() {
 		db.close();
 		db = null;
 	}
 	
 	public void storeObject(Object o) {
+		this.openDatabase();
 		db.store(o);
+		this.closeDatabase();
 	}
 	
 	public void updateObject(Object o) {
+		this.openDatabase();
 		db.store(o);
+		this.closeDatabase();
 	}
 	
 	public void removeObject(Object o) {
+		this.openDatabase();
 		db.delete(o);
+		this.closeDatabase();
 	}
 	
 	/**
@@ -53,7 +59,11 @@ public class Database {
 	 * @return
 	 */
 	public List<?> getList(Class<?> classQuery) {
-		return db.query(classQuery);
+		this.openDatabase();
+		List<?> ret = db.query(classQuery);
+		this.closeDatabase();
+		
+		return ret;
 	}
 	
 	/**
@@ -62,6 +72,8 @@ public class Database {
 	 * @return
 	 */
 	public List<Emprunt> getEmprunts(final boolean enCours) {
+		this.openDatabase();
+		
 		List<Emprunt> result = db.query(new Predicate<Emprunt>() {
 			@Override
 			public boolean match(Emprunt e) {
@@ -79,6 +91,8 @@ public class Database {
 	 * @return
 	 */
 	public Emprunt getEmprunt(final String isbn, final int id) {
+		this.openDatabase();
+		
 		ObjectSet<Emprunt> result = db.query(new Predicate<Emprunt>() {
 			@Override
 			public boolean match(Emprunt e) {
@@ -86,10 +100,14 @@ public class Database {
 			}
 		});
 		
+		Emprunt ret = null;
+		
 		if(!result.isEmpty())
-			return result.get(0);
-		else
-			return null;
+			ret = (Emprunt) result.get(0);
+		
+		this.closeDatabase();
+		
+		return ret;
 	}
 	
 	/**
@@ -98,6 +116,8 @@ public class Database {
 	 * @return
 	 */
 	public Media getMediaByIsbn(final String isbn) {
+		this.openDatabase();
+		
 		ObjectSet<Media> result = db.query(new Predicate<Media>() {
 			@Override
 			public boolean match(Media m) {
@@ -105,10 +125,14 @@ public class Database {
 			}
 		});
 		
+		Media ret = null;
+		
 		if(!result.isEmpty())
-			return result.get(0);
-		else
-			return null;
+			ret = result.get(0);
+		
+		this.closeDatabase();
+		
+		return ret;
 	}
 	
 	/**
@@ -117,6 +141,8 @@ public class Database {
 	 * @return
 	 */
 	public Membre getMembreById(final int id) {
+		this.openDatabase();
+		
 		ObjectSet<Membre> result = db.query(new Predicate<Membre>() {
 			@Override
 			public boolean match(Membre m) {
@@ -124,9 +150,13 @@ public class Database {
 			}
 		});
 		
+		Membre ret = null;
+		
 		if(!result.isEmpty())
-			return result.get(0);
-		else
-			return null;
+			ret = result.get(0);
+		
+		this.closeDatabase();
+		
+		return ret;
 	}
 }
