@@ -21,10 +21,12 @@ public class Bibliotheque {
 	
 	public static void initBibliotheque() {
 		db = new Database();
+		db.openDatabase();
 	}
 
 	public static void closeBibliotheque() {
 		System.out.print("Fermeture du programme en cours...");
+		db.closeDatabase();
 		System.out.println(" Ok !");
 		System.exit(0);
 	}
