@@ -12,4 +12,9 @@ public class Dvd extends AudioVisuel {
 	public float getPrix(){
 		return 0;
 	}
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
+		return lbls;
+	}
 }

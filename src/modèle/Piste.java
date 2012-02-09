@@ -30,5 +30,10 @@ public class Piste {
 	public void setDuree(int duree) {
 		this.duree = duree;
 	}
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"Numéro de piste", "Titre", "Durée"};
+		return lbls;
+	}
 
 }

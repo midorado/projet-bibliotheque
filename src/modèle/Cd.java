@@ -32,4 +32,9 @@ public class Cd extends AudioVisuel {
 	public int getNbPistes() {
 		return pistes.size();
 	}
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution"};
+		return lbls;
+	}
 }

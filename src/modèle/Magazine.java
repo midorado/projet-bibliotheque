@@ -24,4 +24,9 @@ public class Magazine extends Litteraire {
 	public void setModeParution(String modeParution) {
 		this.modeParution = modeParution;
 	}
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution"};
+		return lbls;
+	}
 }
