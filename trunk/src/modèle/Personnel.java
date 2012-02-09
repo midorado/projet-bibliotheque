@@ -23,4 +23,8 @@ public class Personnel extends Membre {
 		this.poste = poste;
 	}
 
+	public static String[] getLabelValues() {
+		String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance", "Poste"};
+		return lbls;
+	}
 }

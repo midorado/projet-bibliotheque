@@ -42,4 +42,9 @@ public class CoffretDvd extends AudioVisuel {
 		this.dvds = dvds;
 	}
 	/* ****************Fin Get Set******************* */
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
+		return lbls;
+	}
 }

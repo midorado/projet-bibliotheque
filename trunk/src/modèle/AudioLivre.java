@@ -46,5 +46,10 @@ public class AudioLivre extends Media {
 		
 		return duree;
 	}
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
+		return lbls;
+	}
 
 }
