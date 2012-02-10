@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Date;
 
+import javax.print.attribute.standard.Media;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -79,7 +80,7 @@ public class AjoutFrame extends JFrame implements ActionListener {
 		else if(this.typeObj == Magazine.class)
 			labels = Magazine.getLabelValues();
 		
-		form = new TextForm(labels);
+		form = new TextForm(labels, Media.class);
 		
 		container.add(form, BorderLayout.NORTH);
 		
@@ -110,9 +111,9 @@ public class AjoutFrame extends JFrame implements ActionListener {
 				prenom = form.getFieldText(2);
 				dateNaiss = null;
 				try {
-					dateNaiss = Bibliotheque.stringToDate(form.getFields()[3].getText());
+					dateNaiss = Bibliotheque.stringToDate(form.getFieldText(3));
 				} catch (ParseException e1) {
-				//	err = true;
+					err = true;
 				}
 				
 				// Valeurs spécifiques
@@ -126,9 +127,9 @@ public class AjoutFrame extends JFrame implements ActionListener {
 				titre = form.getFields()[2].getText();
 				dateParution = null;
 				try {
-					dateParution = Bibliotheque.stringToDate(form.getFields()[3].getText());
+					dateParution = Bibliotheque.stringToDate(form.getFieldText(3));
 				} catch (ParseException e1) {
-				//	err = true;
+					err = true;
 				}
 				
 				// Valeurs spécifiques
@@ -137,7 +138,7 @@ public class AjoutFrame extends JFrame implements ActionListener {
 						nbPages = Integer.parseInt(form.getFieldText(4));
 					}
 					catch (NumberFormatException nfe) {
-						//err = true;
+						err = true;
 					}
 					
 					if(typeObj == Magazine.class)
@@ -148,38 +149,38 @@ public class AjoutFrame extends JFrame implements ActionListener {
 						duree = Integer.parseInt(form.getFieldText(4));
 					}
 					catch (NumberFormatException nfe) {
-						//err = true;
+						err = true;
 					}
-					
-				
 				}
 			}
 			
-			if(this.typeObj == Abonne.class)
-				Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
-			else if(this.typeObj == Personnel.class)
-				Bibliotheque.addMembre(new Personnel(id, nom, prenom, dateNaiss, poste));
-			else if(this.typeObj == AudioLivre.class)
-				Bibliotheque.addMedia(new AudioLivre(isbn, auteur, titre, dateParution, nbPages, null));
-			else if(this.typeObj == Cd.class)
-				Bibliotheque.addMedia(new Cd(isbn, auteur, titre, dateParution, null));
-			else if(this.typeObj == CoffretDvd.class)
-				Bibliotheque.addMedia(new CoffretDvd(isbn, auteur, titre, dateParution, null));
-			else if(this.typeObj == Dvd.class)
-				Bibliotheque.addMedia(new Dvd(isbn, auteur, titre, dateParution, duree));
-			else if(this.typeObj == Livre.class)
-				Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
-			else if(this.typeObj == Magazine.class)
-				Bibliotheque.addMedia(new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution));
-
-			
-			if(err) {
-				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs");
+			if(err) { // Message d'erreur
+				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 			else {
-			//	Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
-				this.dispose();
+				if(this.typeObj == Abonne.class)
+					Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
+				else if(this.typeObj == Personnel.class)
+					Bibliotheque.addMembre(new Personnel(id, nom, prenom, dateNaiss, poste));
+				else if(this.typeObj == AudioLivre.class)
+					Bibliotheque.addMedia(new AudioLivre(isbn, auteur, titre, dateParution, nbPages, null));
+				else if(this.typeObj == Cd.class)
+					Bibliotheque.addMedia(new Cd(isbn, auteur, titre, dateParution, null));
+				else if(this.typeObj == CoffretDvd.class)
+					Bibliotheque.addMedia(new CoffretDvd(isbn, auteur, titre, dateParution, null));
+				else if(this.typeObj == Dvd.class)
+					Bibliotheque.addMedia(new Dvd(isbn, auteur, titre, dateParution, duree));
+				else if(this.typeObj == Livre.class)
+					Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
+				else if(this.typeObj == Magazine.class)
+					Bibliotheque.addMedia(new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution));
+				
+				this.dispose(); // On ferme la fenetre
 			}
+	
+			//	Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
+				
+		
 		}
 	}
 }
