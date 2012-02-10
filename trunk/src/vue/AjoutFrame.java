@@ -104,8 +104,8 @@ public class AjoutFrame extends JFrame implements ActionListener {
 			String nom = null, prenom = null, poste = null, isbn = null, auteur = null, titre = null, modeParution = null;
 			Date dateNaiss = null, dateParution = null;
 			
-			// Valeurs communes aux membres
 			if(this.typeObj == Abonne.class || this.typeObj == Personnel.class) {
+				// Valeurs communes aux membres
 				id = Bibliotheque.getNouvelIdMembre();
 				nom = form.getFieldText(1);
 				prenom = form.getFieldText(2);
@@ -119,9 +119,10 @@ public class AjoutFrame extends JFrame implements ActionListener {
 				// Valeurs spécifiques
 				if(this.typeObj == Personnel.class) 
 					poste = form.getFieldText(3);
-				
+	
 			}
-			else { // Valeurs communes aux médias
+			else { 
+				// Valeurs communes aux médias
 				isbn = form.getFields()[0].getText();
 				auteur = form.getFields()[1].getText();
 				titre = form.getFields()[2].getText();
@@ -157,7 +158,7 @@ public class AjoutFrame extends JFrame implements ActionListener {
 			if(err) { // Message d'erreur
 				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
-			else {
+			else { // Ajout de l'objet dans la base
 				if(this.typeObj == Abonne.class)
 					Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
 				else if(this.typeObj == Personnel.class)
@@ -177,9 +178,6 @@ public class AjoutFrame extends JFrame implements ActionListener {
 				
 				this.dispose(); // On ferme la fenetre
 			}
-	
-			//	Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
-				
 		
 		}
 	}
