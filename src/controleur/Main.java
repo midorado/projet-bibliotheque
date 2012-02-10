@@ -4,10 +4,12 @@ import java.util.List;
 
 import vue.AjoutFrame;
 import vue.MainFrame;
+import vue.TestJTable;
 import modèle.Abonne;
 import modèle.Dvd;
 import modèle.Livre;
 import modèle.Media;
+import modèle.Personnel;
 import modèle.Piste;
 
 /**
@@ -36,9 +38,11 @@ public class Main {
 	 //MainFrame framePrincipale = new MainFrame(); 
 	 //framePrincipale.setVisible(true);
 	   
-	    AjoutFrame af = new AjoutFrame("Ajouter un livre", Abonne.class);
-	    af.setVisible(true);
-	    
+	  //  AjoutFrame af = new AjoutFrame("Ajouter un livre", Personnel.class);
+	  //  af.setVisible(true);
+	   
+	    TestJTable frameJT = new TestJTable();
+	    frameJT.setVisible(true);
 	//    Bibliotheque.closeBibliotheque(); // Execute les sauvegardes et ferme la base*/
 		
 	}
