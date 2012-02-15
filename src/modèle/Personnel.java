@@ -5,7 +5,7 @@ import java.util.Date;
 public class Personnel extends Membre {
 
 	private String poste;
-	
+
 	public Personnel(int identifiant, String nom, String prenom, Date dateNaiss, String poste) {
 		super(identifiant, nom, prenom, dateNaiss);
 		this.setPoste(poste);

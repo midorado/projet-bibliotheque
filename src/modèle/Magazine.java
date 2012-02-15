@@ -21,6 +21,7 @@ public class Magazine extends Litteraire {
 	public String getModeParution() {
 		return modeParution;
 	}
+
 	public void setModeParution(String modeParution) {
 		this.modeParution = modeParution;
 	}
