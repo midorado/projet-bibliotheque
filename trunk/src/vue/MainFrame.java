@@ -27,37 +27,35 @@ public class MainFrame extends JFrame {
 		this.setSize(400, 200);
 		
 		pnlOnglet = new JTabbedPane();
-		
-		/* test données */
-		String  title[] = {"Pseudo", "Age", "Taille"};
-		
+				
 		/* ajout des Onglets Media */
 				
 		ListePanel pnlMedia = new ListePanel();
+		pnlMedia.setList(Bibliotheque.getListLivre());
 		
 		/* liste des media */
 		JComboBox listeMedia = new JComboBox();
 		listeMedia.setPreferredSize(new Dimension(100,20));
-		listeMedia.addItem("AudioLivre");
+		listeMedia.addItem("Livre");
 		listeMedia.addItem("Cd");
 		listeMedia.addItem("CoffreDvd");
-		listeMedia.addItem("Livre");
+		listeMedia.addItem("AudioLivre");
 		listeMedia.addItem("Magazine");
 		pnlMedia.add(listeMedia, BorderLayout.NORTH);
-		pnlMedia.setTableauModele(title, Bibliotheque.getListMedias().toArray());
 		pnlOnglet.addTab("Medias", pnlMedia);
-		
-		
+				
 		/* ajout onglet Membre */
 		
 		ListePanel pnlMembre = new ListePanel();
-	//	pnlMembre.setTableauModele(title, );
+		System.out.println("taille liste : "+Bibliotheque.getListAbonnes().size());
+		pnlMembre.setList(Bibliotheque.getListAbonnes());
 		pnlMembre.setBackground(Color.CYAN);
 		pnlOnglet.addTab("Membres", pnlMembre);
 		
 		/* ajout onglet Emprunt */
 		
 		ListePanel pnlEmprunt = new ListePanel();
+		pnlEmprunt.setList(Bibliotheque.getListEmpruntsEnCours());
 		pnlEmprunt.setBackground(Color.MAGENTA);
 		pnlOnglet.addTab("Emprunts", pnlEmprunt);
 		/* 	Fin Onglets */ 
