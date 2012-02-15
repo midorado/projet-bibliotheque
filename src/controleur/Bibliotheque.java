@@ -8,11 +8,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import modèle.Abonne;
 import modèle.AudioLivre;
+import modèle.Cd;
+import modèle.CoffretDvd;
 import modèle.Database;
+import modèle.Dvd;
 import modèle.Emprunt;
+import modèle.Livre;
+import modèle.Magazine;
 import modèle.Media;
 import modèle.Membre;
+import modèle.Personnel;
 
 /**
  * 
@@ -135,5 +142,97 @@ public class Bibliotheque {
 	public static Date stringToDate(String date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		return formatter.parse(date);
+	}
+	
+	/**
+	 * 
+	 * @param typeObj
+	 * @param editable
+	 * @return
+	 */
+	public static String[] getLabelValues(Class<?> typeObj, boolean editable) {
+		if(typeObj == Abonne.class) {
+			if(!editable) { // Pour un simple affichage
+				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance"};
+				return lbls;
+			}
+			else { // Lorsqu'on créé ou on modifie l'objet : ex: on ne peut pas renseigner l'identifiant
+				String[] lbls = {"Nom", "Prénom", "Date de naissance"};
+				return lbls;
+			}
+		}
+		else if(typeObj == Personnel.class) {
+			if(!editable) {
+				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance","Poste"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"Nom", "Prénom", "Date de naissance", "Poste"};
+				return lbls;
+			}
+		}
+		else if(typeObj == AudioLivre.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
+				return lbls;
+			}
+		}
+		else if(typeObj == Cd.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution"};
+				return lbls;
+			}
+		}
+		else if(typeObj == CoffretDvd.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
+				return lbls;
+			}		
+		}
+		else if(typeObj == Dvd.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
+				return lbls;
+			}		
+		}
+		else if(typeObj == Livre.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
+				return lbls;
+			}		
+		}
+		else if(typeObj == Magazine.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution","Prix"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution"};
+				return lbls;
+			}
+		}
+		else {
+			throw new IllegalArgumentException();
+		}
 	}
 }
