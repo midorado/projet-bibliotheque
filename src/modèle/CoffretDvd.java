@@ -43,8 +43,4 @@ public class CoffretDvd extends AudioVisuel {
 	}
 	/* ****************Fin Get Set******************* */
 	
-	public static String[] getLabelValues() {
-		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
-		return lbls;
-	}
 }

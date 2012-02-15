@@ -14,10 +14,4 @@ public class Livre extends Litteraire {
 	public float getPrix() {
 		return (float) (getNbPages() * 0.01);
 	}
-	
-	public static String[] getLabelValues() {
-		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
-		return lbls;
-	}
-
 }

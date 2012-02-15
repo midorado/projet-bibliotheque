@@ -18,9 +18,4 @@ public class Abonne extends Membre {
 		
 		return reduc;
 	}
-
-	public static String[] getLabelValues() {
-		String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance"};
-		return lbls;
-	}
 }

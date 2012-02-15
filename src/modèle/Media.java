@@ -64,4 +64,9 @@ public abstract class Media {
 	}
 	
 	/* ****************Fin Get Set******************* */
+	
+	public static String[] getLabelValues() {
+		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution"};
+		return lbls;
+	}
 }
