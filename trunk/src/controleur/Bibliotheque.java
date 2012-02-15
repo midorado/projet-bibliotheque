@@ -119,8 +119,8 @@ public class Bibliotheque {
 		return null;
 	}
 	
-	public static List<Membre> getListAbonnes() {
-		return null;
+	public static List<Abonne> getListAbonnes() {
+		return (List<Abonne>) db.getList(Abonne.class);
 	}
 	
 	public static List<Media> getListMedias() {
@@ -138,6 +138,10 @@ public class Bibliotheque {
 	public static List<AudioLivre> getListAudioLivre(){
 		return (List<AudioLivre>) db.getList(AudioLivre.class);
 	}
+	
+	public static List<Livre> getListLivre(){
+		return (List<Livre>) db.getList(Livre.class);
+	}
 
 	public static Date stringToDate(String date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -153,7 +157,7 @@ public class Bibliotheque {
 	public static String[] getLabelValues(Class<?> typeObj, boolean editable) {
 		if(typeObj == Abonne.class) {
 			if(!editable) { // Pour un simple affichage
-				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance"};
+				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance", "Taux Reduction"};
 				return lbls;
 			}
 			else { // Lorsqu'on créé ou on modifie l'objet : ex: on ne peut pas renseigner l'identifiant
@@ -213,7 +217,7 @@ public class Bibliotheque {
 		}
 		else if(typeObj == Livre.class) {
 			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix", "Empruntable"};
 				return lbls;
 			}
 			else {
