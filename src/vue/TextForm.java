@@ -14,21 +14,13 @@ import modèle.Membre;
 public class TextForm extends JPanel {
 
 	private JTextField[] fields;
-	private Class<?> typeObj;
   
 	/**
 	 * Créé un formulaire en fonction du type d'objet
 	 * @param labels
-	 * @param typeObj
 	 */
-	public TextForm(String[] labels, Class<?> typeObj) {
+	public TextForm(String[] labels) {
 		super(new BorderLayout());
-	  
-		this.typeObj = typeObj;
-	  
-		if(this.typeObj != Media.class && this.typeObj != Membre.class) {
-			throw new IllegalArgumentException("Le type d'objet doit être Media ou Membre");
-		}
 	  
 		JPanel labelPanel = new JPanel(new GridLayout(labels.length, 1));
 		JPanel fieldPanel = new JPanel(new GridLayout(labels.length, 1));
@@ -57,7 +49,7 @@ public class TextForm extends JPanel {
   
 	public String getFieldText(int i) {
 		if(i < 0 || i > this.fields.length-1)
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("int : "+i);
 	  
 		return this.fields[i].getText();
 	}
