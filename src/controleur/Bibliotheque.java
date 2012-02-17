@@ -20,6 +20,7 @@ import modèle.Magazine;
 import modèle.Media;
 import modèle.Membre;
 import modèle.Personnel;
+import modèle.Piste;
 
 /**
  * 
@@ -143,6 +144,14 @@ public class Bibliotheque {
 		return (List<Livre>) db.getList(Livre.class);
 	}
 
+	public static List<Livre> getListMagazine(){
+		return (List<Livre>) db.getList(Magazine.class);
+	}
+
+	public static List<Cd> getListCd() {
+		return (List<Cd>) db.getList(Cd.class);
+	}
+	
 	public static Date stringToDate(String date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		return formatter.parse(date);
@@ -187,7 +196,7 @@ public class Bibliotheque {
 		}
 		else if(typeObj == Cd.class) {
 			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Prix"};
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Prix", "Nombre de pistes", "Durée"};
 				return lbls;
 			}
 			else {
@@ -235,8 +244,18 @@ public class Bibliotheque {
 				return lbls;
 			}
 		}
+		else if(typeObj == Piste.class) {
+			if(!editable) {
+				String[] lbls = {"Numéro","Titre","Durée"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"Numéro","Titre","Durée"};
+				return lbls;
+			}
+		}
 		else {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Classe non répertoriée");
 		}
 	}
 }
