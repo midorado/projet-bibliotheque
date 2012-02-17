@@ -12,10 +12,14 @@ public class Cd extends AudioVisuel {
 			Date uneDateParrution, List<Piste> pistes) {
 		super(unIsbn, unAuteur, unTitre, uneDateParrution, 0);
 		
+		this.pistes = pistes;
+		
 		int duree = 0;
-		for(Piste p : this.pistes)
-			duree += p.getDuree();
-
+		
+		if(this.pistes != null) {
+			for(Piste p : this.pistes)
+				duree += p.getDuree();
+		}
 		super.setDuree(duree);
 	}
 

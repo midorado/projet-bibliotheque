@@ -51,7 +51,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	private String[] labels;
 	private Class<?> typeObj;
 	private boolean save = true;
-	
+
 	public AjoutDialog(String titreFrame, Class<?> typeObj, JDialog parent) {
 
 		super(parent, titreFrame, true);
@@ -309,4 +309,13 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	public void setForm(TextForm form) {
 		this.form = form;
 	}
+	
+	public Class<?> getTypeObj() {
+		return typeObj;
+	}
+
+	public void setTypeObj(Class<?> typeObj) {
+		this.typeObj = typeObj;
+	}
+
 }
