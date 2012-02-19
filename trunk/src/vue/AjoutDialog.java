@@ -1,9 +1,6 @@
 package vue;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -18,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
 
 import modèle.Abonne;
 import modèle.AudioLivre;
@@ -33,9 +29,6 @@ import modèle.Piste;
 import controleur.Bibliotheque;
 
 public class AjoutDialog extends JDialog implements ActionListener {
-
-	public static final int RET_CANCEL = 0;
-	public static final int RET_OK = 1;
 	
 	private int retStatus = -1;
 	private JPanel container;
@@ -44,7 +37,6 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	private JButton btnAnnuler;
 	private JButton btnAjoutDvdOuPiste; // Pour les CD ou les DVD
 	private JLabel lblListeDvdOuPiste; // idem
-	private JList jlDvdOuPiste;
 	private List<Dvd> listDvds;
 	private List<Piste> listPistes;
 	private TextForm form;
@@ -69,7 +61,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	private void buildInterface() {
 	//	setSize(400, 350);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	//	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		
 		container = new JPanel();
@@ -138,7 +130,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnAnnuler) {
-			this.retStatus = RET_CANCEL;
+			this.retStatus = BiblioDialog.RET_CANCEL;
 			setVisible(false);
 			dispose();
 		}
@@ -233,12 +225,12 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				else if(this.typeObj == Magazine.class)
 					Bibliotheque.addMedia(new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution));
 				
-				retStatus = RET_OK;
+				retStatus = BiblioDialog.RET_OK;
 				
 				dispose(); // On ferme la fenetre
 			}
 			else {
-				retStatus = RET_OK;
+				retStatus = BiblioDialog.RET_OK;
 				dispose(); // On ferme la fenetre
 			}
 		
@@ -248,7 +240,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class, this);
 				frameDvd.setVisible(true);
 				
-				if(frameDvd.getReturnStatus() == RET_OK) {
+				if(frameDvd.getReturnStatus() == BiblioDialog.RET_OK) {
 					
 					// On créé l'objet et on le stock dans l'ArrayList
 					String isbn = frameDvd.getForm().getFieldText(0);
@@ -276,7 +268,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class, this);
 				framePiste.setVisible(true);
 				
-				if(framePiste.getReturnStatus() == RET_OK) {
+				if(framePiste.getReturnStatus() == BiblioDialog.RET_OK) {
 					
 					// On créé l'objet et on le stock dans l'ArrayList
 					int numero = Integer.parseInt(framePiste.getForm().getFieldText(0));

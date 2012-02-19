@@ -14,7 +14,7 @@ public class Database {
 
 	private ObjectContainer db = null;
 	private EmbeddedConfiguration config;
-	private static final String PATH_DATABASE = "bibliotheque0012.db4o";
+	private static final String PATH_DATABASE = "bibliotheque0017.db4o";
 	
 	/**
 	 * Configuration et ouverture de la base

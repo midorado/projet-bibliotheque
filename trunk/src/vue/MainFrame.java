@@ -10,6 +10,8 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.table.DefaultTableModel;
@@ -45,11 +47,9 @@ public class MainFrame extends JFrame implements ActionListener {
 		/* ajout des Onglets Media */
 				
 		pnlMedia = new ListePanel(Bibliotheque.getListLivre());
-	//	pnlMedia.setList(Bibliotheque.getListLivre());
 		
 		/* liste des types de media */
 		listeMedia = new JComboBox<String>();
-	//	listeMedia.setPreferredSize(new Dimension(100,20));
 		listeMedia.addItem("Livre");
 		listeMedia.addItem("Magazine");
 		listeMedia.addItem("CD");
@@ -63,8 +63,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		/* ajout onglet Membre */
 		
 		pnlMembre = new ListePanel(Bibliotheque.getListMembres());
-		System.out.println("taille liste : "+Bibliotheque.getListAbonnes().size());
-	//	pnlMembre.setList(Bibliotheque.getListAbonnes());
 		pnlOnglet.addTab("Membres", pnlMembre);
 		
 		/* liste des types de membre */
@@ -77,8 +75,6 @@ public class MainFrame extends JFrame implements ActionListener {
 		/* ajout onglet Emprunt */
 		
 		pnlEmprunt = new ListePanel(Bibliotheque.getListEmpruntsEnCours());
-	//	pnlEmprunt.setList(Bibliotheque.getListEmpruntsEnCours());
-		pnlEmprunt.setBackground(Color.MAGENTA);
 		pnlOnglet.addTab("Emprunts", pnlEmprunt);
 		
 		/* liste des types d'emprunts */
@@ -116,83 +112,125 @@ public class MainFrame extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		if(e.getSource() == this.btnAjouter) {
+		
+		/* ===== Bouton AJOUTER ===== */
+		if(e.getSource() == this.btnAjouter) { 
 			AjoutDialog ajd = null;
 			
 			if(this.pnlMedia.isShowing()) {
 				
-				if(this.listeMedia.getSelectedItem() == "Livre") {
+				if(this.listeMedia.getSelectedItem() == "Livre")
 					ajd = new AjoutDialog("Ajouter un livre", Livre.class, null);					
-				}
-				else if(this.listeMedia.getSelectedItem() == "Magazine") {
+				else if(this.listeMedia.getSelectedItem() == "Magazine")
 					ajd = new AjoutDialog("Ajouter un magazine", Magazine.class, null);
-				}
-				else if(this.listeMedia.getSelectedItem() == "CD") {
+				else if(this.listeMedia.getSelectedItem() == "CD")
 					ajd = new AjoutDialog("Ajouter un CD", Cd.class, null);
-				}
-				else if(this.listeMedia.getSelectedItem() == "DVD") {
+				else if(this.listeMedia.getSelectedItem() == "DVD")
 					ajd = new AjoutDialog("Ajouter un DVD", Dvd.class, null);
-				}
-				else if(this.listeMedia.getSelectedItem() == "Coffret DVD") {
+				else if(this.listeMedia.getSelectedItem() == "Coffret DVD")
 					ajd = new AjoutDialog("Ajouter un coffret DVD", CoffretDvd.class, null);
-				}
-				else if(this.listeMedia.getSelectedItem() == "AudioLivre") {
+				else if(this.listeMedia.getSelectedItem() == "AudioLivre")
 					ajd = new AjoutDialog("Ajouter un audiolivre", AudioLivre.class, null);
-				}
 					 
 				ajd.setVisible(true);
-				listeMedia.repaint();
+				
+				if(ajd.getReturnStatus() == BiblioDialog.RET_OK)
+					refreshTable((String) listeMedia.getSelectedItem());
 				
 			}
 			else if(this.pnlMembre.isShowing()) {
-				if(this.listeMembre.getSelectedItem() == "Abonné") {
+				if(this.listeMembre.getSelectedItem() == "Abonné")
 					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class, null);
-				}
-				else if(this.listeMembre.getSelectedItem() == "Personnel") {
+				else if(this.listeMembre.getSelectedItem() == "Personnel")
 					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class, null);
-				}
 				
 				ajd.setVisible(true);
+				
+				if(ajd.getReturnStatus() == BiblioDialog.RET_OK)
+					refreshTable((String) listeMembre.getSelectedItem());
 			}
 			else if(this.pnlEmprunt.isShowing()) {
 				
 			}
 			
-			
 		}
 		
-		if(e.getSource() == listeMedia) {
-
-			if(this.listeMedia.getSelectedItem() == "Livre") {
-				pnlMedia.setList(Bibliotheque.getListLivre());
-			}
-			else if(this.listeMedia.getSelectedItem() == "Magazine") {
-				pnlMedia.setList(Bibliotheque.getListMagazine());
-				pnlMedia.repaint();
-				System.out.println("fuckkkk");
-			}
-			else if(this.listeMedia.getSelectedItem() == "CD") {
+		/* ===== Bouton SUPPRIMER ===== */
+		if(e.getSource() == btnSupprimer) {
+			if(this.pnlMedia.isShowing()) {
+				int row = pnlMedia.getTable().getSelectedRow();
 				
-				pnlMedia.setList(Bibliotheque.getListCd());
-			
-				System.out.println("CD selectionne");
+				if(row != -1) { // Test si une ligne est sélectionnée
+					String isbn = (String) pnlMedia.getTable().getValueAt(row, 0);
+					String titre = (String) pnlMedia.getTable().getValueAt(row, 1);
+					
+					int rep = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer le média "+isbn+" ("+titre+") ?", "Suppresion d'un média", JOptionPane.YES_NO_OPTION);
+
+					if(rep == JOptionPane.YES_OPTION) {
+						Bibliotheque.delMedia(isbn);
+						refreshTable(listeMedia.getSelectedItem());
+					}
+				}
 			}
-			else if(this.listeMedia.getSelectedItem() == "DVD") {
+			else if(this.pnlMembre.isShowing()) {
+				int row = pnlMembre.getTable().getSelectedRow();
+				
+				if(row != -1) { // Test si une ligne est sélectionnée
+					int id = Integer.parseInt((String) pnlMedia.getTable().getValueAt(row, 0));
+					String nom = (String) pnlMedia.getTable().getValueAt(row, 1);
+					String prenom = (String) pnlMedia.getTable().getValueAt(row, 2);
+					
+					int rep = JOptionPane.showConfirmDialog(this, "Voulez-vous vraiment supprimer "+nom+" "+prenom+" ("+id+") ?", "Suppresion d'un membre", JOptionPane.YES_NO_OPTION);
+
+					if(rep == JOptionPane.YES_OPTION) {
+						Bibliotheque.delMembre(id);
+						refreshTable(listeMembre.getSelectedItem());
+					}
+				}
 			}
-			else if(this.listeMedia.getSelectedItem() == "Coffret DVD") {
+			else if(this.pnlEmprunt.isShowing()) { // Dans ce cas là, on ne fait pas une suppression mais on termine l'emprunt
+				
 			}
-			else if(this.listeMedia.getSelectedItem() == "AudioLivre") {
-			}
+		}
+		
+		/* ===== Changement de sélection d'un item ===== */
+		if(e.getSource() == listeMedia) { 
+			refreshTable(listeMedia.getSelectedItem());
 		}
 		
 		if(e.getSource() == listeMembre) {
-			
+			refreshTable(listeMembre.getSelectedItem());
 		}
 		
 		if(e.getSource() == listeEmprunt) {
-			
+			refreshTable(listeEmprunt.getSelectedItem());
 		}
+	}
+	
+	public void refreshTable(Object item) {
+		// Medias
+		if(item.equals("Livre"))
+			pnlMedia.setList(Bibliotheque.getListLivre());
+		else if(item.equals("Magazine"))
+			pnlMedia.setList(Bibliotheque.getListMagazine());
+		else if(item.equals("CD"))
+			pnlMedia.setList(Bibliotheque.getListCd());
+		else if(item.equals("DVD"))
+			pnlMedia.setList(Bibliotheque.getListDvd());
+		else if(item.equals("Coffret DVD"))
+			pnlMedia.setList(Bibliotheque.getListCoffretDvd());
+		else if(item.equals("AudioLivre"))
+			pnlMedia.setList(Bibliotheque.getListAudioLivre());
+		// Membres
+		else if(item.equals("Abonné"))
+			pnlMembre.setList(Bibliotheque.getListAbonnes());
+		else if(item.equals("Personnel"))
+			pnlMembre.setList(Bibliotheque.getListPersonnels());
+		// Emprunts
+		else if(item.equals("En cours"))
+			pnlEmprunt.setList(Bibliotheque.getListEmpruntsEnCours());
+		else if(item.equals("Terminés"))
+			pnlEmprunt.setList(Bibliotheque.getListEmpruntsTermines());
 	}
 	
 }

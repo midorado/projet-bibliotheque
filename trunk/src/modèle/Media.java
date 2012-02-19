@@ -8,8 +8,7 @@ public abstract class Media {
 	private String auteur;
 	private String titre;
 	private Date dateParution;
-	private boolean empruntable;
-	
+
 	/**
 	 * 
 	 * @param unIsbn
@@ -54,13 +53,6 @@ public abstract class Media {
 	}
 	public void setDateParution(Date dateParrution) {
 		this.dateParution = dateParrution;
-	}
-	
-	public boolean isEmpruntable() {
-		return empruntable;
-	}
-	public void setEmpruntable(boolean empruntable) {
-		this.empruntable = empruntable;
 	}
 	
 	/* ****************Fin Get Set******************* */
