@@ -126,7 +126,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 				ajd.setVisible(true); // On affiche le formulaire
 				
 				if(ajd.getReturnStatus() == BiblioDialog.RET_OK) // Si l'objet à été ajouté
-					refreshTable((String) selectedItem); // On met à jour la JTable
+					refreshComponents((String) selectedItem); // On met à jour la JTable
 			}
 			
 			// Emprunt
@@ -135,7 +135,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 				empdial.setVisible(true);
 				
 				if(empdial.getReturnStatus() == BiblioDialog.RET_OK)
-					refreshTable((String) selectedItem);
+					refreshComponents((String) selectedItem);
 				
 			}
 			
@@ -158,7 +158,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 
 				if(rep == JOptionPane.YES_OPTION) {
 					Bibliotheque.delMedia(isbn);
-					refreshTable(selectedItem);
+					refreshComponents(selectedItem);
 				}
 			}
 			// Membre
@@ -172,7 +172,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 
 				if(rep == JOptionPane.YES_OPTION) {
 					Bibliotheque.delMembre(id);
-					refreshTable(selectedItem);
+					refreshComponents(selectedItem);
 				}
 			}
 			// Emprunt
@@ -184,7 +184,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 				
 				if(rep == JOptionPane.YES_OPTION) {
 					Bibliotheque.terminerEmprunt(isbn, id);
-					refreshTable(selectedItem);
+					refreshComponents(selectedItem);
 				}
 			}
 		}
@@ -192,7 +192,7 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 		/* ===== Changement de sélection d'un item ===== */
 		if(e.getSource() == listeItems) {
 			if(selectedItem != null) {
-				refreshTable(selectedItem);
+				refreshComponents(selectedItem);
 			}
 		}
 	}
@@ -204,41 +204,70 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 	public void stateChanged(ChangeEvent e) {
 		if(e.getSource() == pnlOnglet) {
 			
-			refreshTable(firstItem[pnlOnglet.getSelectedIndex()]); // MAJ JTable
-			refreshTextButtons(firstItem[pnlOnglet.getSelectedIndex()]); // MAJ JButton
+			refreshComponents(firstItem[pnlOnglet.getSelectedIndex()]); // MAJ JTable
 			setItemsComboBox(firstItem[pnlOnglet.getSelectedIndex()]); // MAJ JComboBox
 		
 		}
 	}
 
-	public void refreshTable(Object item) {
+	private void refreshComponents(Object item) {
 		System.out.println(item);
 		// Medias
-		if(item.equals("Livre"))
+		if(item.equals("Livre")) {
 			pnlData.setList(Bibliotheque.getListLivre());
-		else if(item.equals("Magazine"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("Magazine")) {
 			pnlData.setList(Bibliotheque.getListMagazine());
-		else if(item.equals("CD"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("CD")) {
 			pnlData.setList(Bibliotheque.getListCd());
-		else if(item.equals("DVD"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("DVD")) {
 			pnlData.setList(Bibliotheque.getListDvd());
-		else if(item.equals("Coffret DVD"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("Coffret DVD")) {
 			pnlData.setList(Bibliotheque.getListCoffretDvd());
-		else if(item.equals("AudioLivre"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("AudioLivre")) {
 			pnlData.setList(Bibliotheque.getListAudioLivre());
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
 		// Membres
-		else if(item.equals("Abonné"))
+		else if(item.equals("Abonné")) {
 			pnlData.setList(Bibliotheque.getListAbonnes());
-		else if(item.equals("Personnel"))
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("Personnel")) {
 			pnlData.setList(Bibliotheque.getListPersonnels());
+			btnSupprimer.setText("Supprimer");
+			btnSupprimer.setEnabled(true);
+		}
 		// Emprunts
-		else if(item.equals("En cours"))
+		else if(item.equals("En cours")) {
 			pnlData.setList(Bibliotheque.getListEmpruntsEnCours());
-		else if(item.equals("Terminés"))
+			btnSupprimer.setText("Terminer l'emprunt");
+			btnSupprimer.setEnabled(true);
+		}
+		else if(item.equals("Terminés")) {
 			pnlData.setList(Bibliotheque.getListEmpruntsTermines());
+			btnSupprimer.setText("Terminer l'emprunt");
+			btnSupprimer.setEnabled(false);
+		}
 	}
 	
-	public void setItemsComboBox(String firstItem) {
+	private void setItemsComboBox(String firstItem) {
 		listeItems.removeAllItems();
 		
 		if(firstItem.equals("Livre")) {
@@ -256,18 +285,6 @@ public class MainFrame2 extends JFrame implements ActionListener, ChangeListener
 		else if(firstItem.equals("En cours")) {
 			listeItems.addItem("En cours");
 			listeItems.addItem("Terminés");
-		}
-	}
-	
-	private void refreshTextButtons(String firstItem) {
-		if(firstItem.equals("Livre")) {
-			this.btnSupprimer.setText("Supprimer");
-		}
-		else if(firstItem.equals("Abonné")) {
-			btnSupprimer.setText("Supprimer");
-		}
-		else if(firstItem.equals("En cours")) {
-			btnSupprimer.setText("Terminer l'emprunt");
 		}
 	}
 }
