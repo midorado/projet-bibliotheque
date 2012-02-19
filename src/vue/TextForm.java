@@ -16,7 +16,7 @@ public class TextForm extends JPanel {
 	private JTextField[] fields;
   
 	/**
-	 * Créé un formulaire en fonction du type d'objet
+	 * Créé un formulaire
 	 * @param labels
 	 */
 	public TextForm(String[] labels) {

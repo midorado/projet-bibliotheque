@@ -58,6 +58,10 @@ public class Bibliotheque {
 		return null;
 	}
 	
+	public static void delMembre(int id) {
+		db.removeObject(db.getMembreById(id));
+	}
+	
 	public static void addMedia(Media m) {
 		db.storeObject(m);
 	}
@@ -90,12 +94,16 @@ public class Bibliotheque {
 		return true;
 	}
 	
-/*	public static void terminerEmprunt(Emprunt e) {
-		listEmpruntsEnCours.remove(e);
-		e.setEnCours(false);
-		listEmpruntsTermine.add(e);
+	public static void terminerEmprunt(String isbn, int id) {
+		Emprunt emp = Bibliotheque.getEmprunt(isbn, id);
+		
+		emp.setDateRetour(new Date()); // On définit une date de retour --> isEnCours = false
+		
+		System.out.println(emp.getDateRetour());
+		db.storeObject(emp); // On met à jour l'emprunt dans la base
+
 	}
-*/
+
 	public static boolean mediaExists(String isbn) {
 		return (db.getMediaByIsbn(isbn) != null);
 	}
@@ -108,6 +116,14 @@ public class Bibliotheque {
 		return db.getEmprunt(isbn, id);	
 	}
 	
+	public static boolean isEmpruntable(String isbn) {
+		for(Emprunt e : Bibliotheque.getListEmpruntsEnCours()) {
+			if(e.getMedia().getIsbn().equals(isbn))
+				return false;
+		}
+		return true;
+	}
+	
 	public static int getNouvelIdMembre() {
 		return db.getList(Membre.class).size() + 1;
 	}
@@ -116,8 +132,8 @@ public class Bibliotheque {
 		return (List<Membre>) db.getList(Membre.class);
 	}
 	
-	public static List<Membre> getListPersonnels() {
-		return null;
+	public static List<Personnel> getListPersonnels() {
+		return (List<Personnel>) db.getList(Personnel.class);
 	}
 	
 	public static List<Abonne> getListAbonnes() {
@@ -152,6 +168,14 @@ public class Bibliotheque {
 		return (List<Cd>) db.getList(Cd.class);
 	}
 	
+	public static List<Dvd> getListDvd() {
+		return (List<Dvd>) db.getList(Dvd.class);
+	}
+	
+	public static List<CoffretDvd> getListCoffretDvd() {
+		return (List<CoffretDvd>) db.getList(CoffretDvd.class);
+	}
+	
 	public static Date stringToDate(String date) throws ParseException {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		return formatter.parse(date);
@@ -176,7 +200,7 @@ public class Bibliotheque {
 		}
 		else if(typeObj == Personnel.class) {
 			if(!editable) {
-				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance","Poste"};
+				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance","Poste", "Taux Reduction"};
 				return lbls;
 			}
 			else {
@@ -226,7 +250,7 @@ public class Bibliotheque {
 		}
 		else if(typeObj == Livre.class) {
 			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix", "Empruntable"};
+				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
 				return lbls;
 			}
 			else {
@@ -246,11 +270,21 @@ public class Bibliotheque {
 		}
 		else if(typeObj == Piste.class) {
 			if(!editable) {
-				String[] lbls = {"Numéro","Titre","Durée"};
+				String[] lbls = {"Numéro", "Titre", "Durée"};
 				return lbls;
 			}
 			else {
-				String[] lbls = {"Numéro","Titre","Durée"};
+				String[] lbls = {"Numéro", "Titre", "Durée"};
+				return lbls;
+			}
+		}
+		else if(typeObj == Emprunt.class) {
+			if(!editable) {
+				String[] lbls = {"ISBN", "Titre du média", "Identifiant emprunteur","Nom de l'emprunteur", "Date début emprunt", "Date retour limite", "Date retour"};
+				return lbls;
+			}
+			else {
+				String[] lbls = {"ISBN du média", "Identifiant emprunteur"};
 				return lbls;
 			}
 		}
