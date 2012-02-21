@@ -95,7 +95,7 @@ public class Bibliotheque {
 	}
 	
 	public static void terminerEmprunt(String isbn, int id) {
-		Emprunt emp = Bibliotheque.getEmprunt(isbn, id);
+		Emprunt emp = Bibliotheque.getEmpruntEnCours(isbn, id);
 		
 		emp.setDateRetour(new Date()); // On définit une date de retour --> isEnCours = false
 		
@@ -114,6 +114,16 @@ public class Bibliotheque {
 
 	public static Emprunt getEmprunt(String isbn, int id) {	
 		return db.getEmprunt(isbn, id);	
+	}
+	
+	public static Emprunt getEmpruntEnCours(String isbn, int id) {
+		
+		for(Emprunt e : db.getEmprunts(true)) {
+			if(e.getMedia().getIsbn().equals(isbn) && e.getMembre().getIdentifiant() == id)
+				return e;
+		}
+		
+		return null;
 	}
 	
 	public static boolean isEmpruntable(String isbn) {
