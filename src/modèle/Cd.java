@@ -6,12 +6,13 @@ import java.util.List;
 public class Cd extends AudioVisuel {
 
 	private List<Piste> pistes;
-	
+	private boolean enLecture;
 	
 	public Cd(String unIsbn, String unAuteur, String unTitre,
 			Date uneDateParrution, List<Piste> pistes) {
 		super(unIsbn, unAuteur, unTitre, uneDateParrution, 0);
-		
+	
+		this.enLecture = false;
 		this.pistes = pistes;
 		
 		int duree = 0;
@@ -35,5 +36,21 @@ public class Cd extends AudioVisuel {
 	
 	public int getNbPistes() {
 		return pistes.size();
+	}
+	
+	public boolean enLecture(){
+		return this.enLecture;
+	}
+	
+	public void demarrerLecture(){
+		if(!this.enLecture()){
+			this.enLecture = true;
+		}
+	}
+	
+	public void stopperLecture(){
+		if(this.enLecture()){
+			this.enLecture = true;
+		}
 	}
 }
