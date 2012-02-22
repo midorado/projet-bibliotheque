@@ -74,6 +74,42 @@ public class Bibliotheque {
 		return db.getMediaByIsbn(isbn);
 	}
 	
+	public static void EnregistreLecture(String isbn){
+		Media m = db.getMediaByIsbn(isbn);
+		
+		if(m instanceof Livre){
+			m = (Livre) m;
+			if(!((Livre) m ).enLecture()){
+				((Livre) m).demarrerLecture();
+			}
+		}
+		else if(m instanceof Cd){
+			m = (Cd) m;
+			if(!((Cd) m ).enLecture()){
+				((Cd) m).demarrerLecture();
+			}
+		}
+		db.updateObject(m);
+	}
+	
+	public static void stopperLecture(String isbn){
+		Media m = db.getMediaByIsbn(isbn);
+		
+		if(m instanceof Livre){
+			m = (Livre) m;
+			if(((Livre) m).enLecture()){
+				((Livre) m).stopperLecture();
+			}
+		}
+		else if(m instanceof Cd){
+			m = (Cd) m;
+			if(((Cd) m).enLecture()){
+				((Cd) m).stopperLecture();
+			}
+		}
+		db.updateObject(m);
+	}
+	
 /*	public static void addEmprunt(Emprunt e) {
 		db.storeObject(e);
 	}
