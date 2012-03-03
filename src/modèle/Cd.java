@@ -38,19 +38,19 @@ public class Cd extends AudioVisuel {
 		return pistes.size();
 	}
 	
+	public List<Piste> getPistes() {
+		return this.pistes;
+	}
+	
 	public boolean enLecture(){
 		return this.enLecture;
 	}
 	
 	public void demarrerLecture(){
-		if(!this.enLecture()){
-			this.enLecture = true;
-		}
+		this.enLecture = true;
 	}
 	
 	public void stopperLecture(){
-		if(this.enLecture()){
-			this.enLecture = true;
-		}
+		this.enLecture = false;
 	}
 }

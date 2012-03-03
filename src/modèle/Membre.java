@@ -1,8 +1,11 @@
 package modèle;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 public abstract class Membre {
@@ -72,5 +75,13 @@ public abstract class Membre {
 	}
 	public void addEmprunt(Emprunt e) {
 		this.emprunts.add(e);
+	}
+	public String getFullStringDateNaissance() {
+		DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.FRENCH);
+		return formatter.format(dateNaissance);
+	}
+	public String getStringDateNaissance() {
+		SimpleDateFormat pat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+		return pat.format(dateNaissance);
 	}
 }

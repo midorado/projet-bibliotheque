@@ -1,5 +1,10 @@
 package modèle;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import controleur.Bibliotheque;
 
 
 public abstract class Media {
@@ -55,10 +60,19 @@ public abstract class Media {
 		this.dateParution = dateParrution;
 	}
 	
+	public String getFullStringDateParution() {
+		DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.FRENCH);
+		return formatter.format(dateParution);
+	}
+	
+	public String getStringDateParution() {
+		SimpleDateFormat pat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
+		return pat.format(dateParution);
+	}
+	
 	/* ****************Fin Get Set******************* */
 	
 	public static String[] getLabelValues() {
-		String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution"};
-		return lbls;
+		return new String[]{"ISBN", "Auteur", "Titre", "Date de parution"};
 	}
 }
