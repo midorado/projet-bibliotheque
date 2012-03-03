@@ -29,7 +29,7 @@ public class ListePanel extends JPanel {
 		
 		this.setLayout(new BorderLayout());
 		this.table = new JTable();
-		setList(listeData);
+		setList(listeData); // On ajoute les données envoyées par défault
 	
 		this.add(new JScrollPane(this.table), BorderLayout.CENTER);	
 		this.setVisible(true);	
@@ -54,7 +54,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = data.get(i).getIsbn();
 						mesDonnees[i][1] = data.get(i).getAuteur();
 						mesDonnees[i][2] = data.get(i).getTitre();
-						mesDonnees[i][3] = data.get(i).getDateParution().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getNbPages());
 						mesDonnees[i][5] = String.valueOf(data.get(i).getPrix());
 				}
@@ -70,7 +70,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = data.get(i).getIsbn();
 						mesDonnees[i][1] = data.get(i).getAuteur();
 						mesDonnees[i][2] = data.get(i).getTitre();
-						mesDonnees[i][3] = data.get(i).getDateParution().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getNbPages());
 						mesDonnees[i][5] = String.valueOf(data.get(i).getModeParution());
 						mesDonnees[i][6] = String.valueOf(data.get(i).getPrix());
@@ -87,11 +87,10 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = data.get(i).getIsbn();
 						mesDonnees[i][1] = data.get(i).getAuteur();
 						mesDonnees[i][2] = data.get(i).getTitre();
-						mesDonnees[i][3] = data.get(i).getDateParution().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getPrix());
 						mesDonnees[i][5] = String.valueOf(data.get(i).getNbPistes());
 						mesDonnees[i][6] = String.valueOf(data.get(i).getDuree());
-					//	mesDonnees[i][7] = String.valueOf(data.get(i).isEmpruntable());
 				}
 				mesLabels = Bibliotheque.getLabelValues(Cd.class, false);
 			}
@@ -105,7 +104,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = data.get(i).getIsbn();
 						mesDonnees[i][1] = data.get(i).getAuteur();
 						mesDonnees[i][2] = data.get(i).getTitre();
-						mesDonnees[i][3] = data.get(i).getDateParution().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getDuree());
 						mesDonnees[i][5] = String.valueOf(data.get(i).getPrix());
 				}
@@ -121,7 +120,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = data.get(i).getIsbn();
 						mesDonnees[i][1] = data.get(i).getAuteur();
 						mesDonnees[i][2] = data.get(i).getTitre();
-						mesDonnees[i][3] = data.get(i).getDateParution().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getDuree());
 						mesDonnees[i][5] = String.valueOf(data.get(i).getPrix());
 				}
@@ -186,5 +185,29 @@ public class ListePanel extends JPanel {
 			
 			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels));
 		}
+	}
+	
+	// JTable spécifique pour afficher les médias en cours de lecture : seulement les livres et les CD --> cast en Media
+	public void setLectureEnCoursList(List<Media> listeData) {
+		String[] mesLabels = Bibliotheque.getLabelValues(Media.class, false);
+		Object[][] mesDonnees = new String[listeData.size()][mesLabels.length];
+
+		if(listeData == null || listeData.isEmpty()) {
+			this.table.setModel(new DefaultTableModel()); // JTable VIDE
+		}
+		else {
+			for(int i=0; i<listeData.size(); i++) {
+				Media m = listeData.get(i);
+
+				mesDonnees[i][0] = m.getIsbn();
+				mesDonnees[i][1] = m.getAuteur();
+				mesDonnees[i][2] = m.getTitre();
+				mesDonnees[i][3] = m.getDateParution().toLocaleString();
+				mesDonnees[i][4] = String.valueOf(m.getPrix());
+			}
+			
+			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels));
+		}
+		
 	}
 }

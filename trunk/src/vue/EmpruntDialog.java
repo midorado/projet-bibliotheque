@@ -82,9 +82,9 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 					JOptionPane.showConfirmDialog(this, "Le membre ou le média n'existe pas", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					// On vérifie que le média n'est pas en cours d'emprunt
+					// On vérifie que le média n'est pas en cours d'emprunt ou d'écoute/lecture
 					if(!Bibliotheque.isEmpruntable(isbn)) {
-						JOptionPane.showConfirmDialog(this, "Le média est déjà en cours d'emprunt", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showConfirmDialog(this, "Le média est déjà en cours d'emprunt ou en cours d'écoute", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 					}
 					else if(Bibliotheque.nouvelEmprunt(isbn, id)) { // Tout est OK en principe !
 						this.retStatus = BiblioDialog.RET_OK; 	// On informe la frame parente que tout est OK

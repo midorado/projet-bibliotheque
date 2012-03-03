@@ -53,4 +53,13 @@ public class TextForm extends JPanel {
 	  
 		return this.fields[i].getText();
 	}
+
+	public void presetFieldValues(String[] values) {
+		if(values.length != fields.length)
+			throw new IllegalArgumentException("Il doit y avoir autant de champs que de valeurs !");
+	
+		for(int i=0; i<values.length; i++)
+			this.fields[i].setText(values[i]);
+
+	}
 }
