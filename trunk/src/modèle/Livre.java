@@ -24,15 +24,11 @@ public class Livre extends Litteraire {
 	}
 	
 	public void demarrerLecture(){
-		if(!this.enLecture()){
-			this.enLecture = true;
-		}
+		this.enLecture = true;
 	}
 	
 	public void stopperLecture(){
-		if(this.enLecture()){
-			this.enLecture = true;
-		}
+		this.enLecture = false;
 	}
 
 }
