@@ -43,6 +43,10 @@ public class Bibliotheque {
 		System.exit(0);
 	}
 	
+	public static void updateMedia(Media m) {
+		db.updateObject(m);
+	}
+	
 	public static void addMembre(Membre m) {
 		db.storeObject(m);
 	}
@@ -72,42 +76,6 @@ public class Bibliotheque {
 	
 	public static Media getMediaByIsbn(String isbn) {
 		return db.getMediaByIsbn(isbn);
-	}
-	
-	public static void EnregistreLecture(String isbn){
-		Media m = db.getMediaByIsbn(isbn);
-		
-		if(m instanceof Livre){
-			m = (Livre) m;
-			if(!((Livre) m ).enLecture()){
-				((Livre) m).demarrerLecture();
-			}
-		}
-		else if(m instanceof Cd){
-			m = (Cd) m;
-			if(!((Cd) m ).enLecture()){
-				((Cd) m).demarrerLecture();
-			}
-		}
-		db.updateObject(m);
-	}
-	
-	public static void stopperLecture(String isbn){
-		Media m = db.getMediaByIsbn(isbn);
-		
-		if(m instanceof Livre){
-			m = (Livre) m;
-			if(((Livre) m).enLecture()){
-				((Livre) m).stopperLecture();
-			}
-		}
-		else if(m instanceof Cd){
-			m = (Cd) m;
-			if(((Cd) m).enLecture()){
-				((Cd) m).stopperLecture();
-			}
-		}
-		db.updateObject(m);
 	}
 	
 /*	public static void addEmprunt(Emprunt e) {
@@ -162,16 +130,45 @@ public class Bibliotheque {
 		return null;
 	}
 	
+	/**
+	 * Le média ne doit ni être en cours d'emprunts ou en cours de lecture/écoute
+	 * @param isbn
+	 * @return
+	 */
 	public static boolean isEmpruntable(String isbn) {
-		for(Emprunt e : Bibliotheque.getListEmpruntsEnCours()) {
+		// Test si en cours d'emprunt
+		for(Emprunt e : Bibliotheque.getListEmpruntsEnCours())
 			if(e.getMedia().getIsbn().equals(isbn))
 				return false;
-		}
+		
+		// Test si en cours de lecture pour les livre et les cd
+		for(Livre l : Bibliotheque.getListLivre())
+			if(l.enLecture())
+				return false;
+		
+		for(Cd c : Bibliotheque.getListCd())
+			if(c.enLecture())
+				return false;
+		
 		return true;
 	}
 	
 	public static int getNouvelIdMembre() {
 		return db.getList(Membre.class).size() + 1;
+	}
+	
+	public static List<Media> getListMediasEnLecture() {
+		List<Media> mediasEnLecture = new ArrayList<Media>();
+		
+		for(Livre l : Bibliotheque.getListLivre())
+			if(l.enLecture())
+				mediasEnLecture.add(l);
+		
+		for(Cd c : Bibliotheque.getListCd())
+			if(c.enLecture())
+				mediasEnLecture.add(c);
+		
+		return mediasEnLecture;
 	}
 	
 	public static List<Membre> getListMembres() {
@@ -235,107 +232,74 @@ public class Bibliotheque {
 	 */
 	public static String[] getLabelValues(Class<?> typeObj, boolean editable) {
 		if(typeObj == Abonne.class) {
-			if(!editable) { // Pour un simple affichage
-				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance", "Taux Reduction"};
-				return lbls;
-			}
-			else { // Lorsqu'on créé ou on modifie l'objet : ex: on ne peut pas renseigner l'identifiant
-				String[] lbls = {"Nom", "Prénom", "Date de naissance"};
-				return lbls;
-			}
+			if(!editable) // Pour un simple affichage
+				return new String[]{"Identifiant", "Nom", "Prénom", "Date de naissance", "Taux Reduction"};
+			else // Lorsqu'on créé ou on modifie l'objet : ex: on ne peut pas renseigner l'identifiant
+				return new String[]{"Nom", "Prénom", "Date de naissance"};
 		}
 		else if(typeObj == Personnel.class) {
-			if(!editable) {
-				String[] lbls = {"Identifiant", "Nom", "Prénom", "Date de naissance","Poste", "Taux Reduction"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"Nom", "Prénom", "Date de naissance", "Poste"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"Identifiant", "Nom", "Prénom", "Date de naissance","Poste", "Taux Reduction"};
+			else
+				return new String[]{"Nom", "Prénom", "Date de naissance", "Poste"};			
 		}
 		else if(typeObj == AudioLivre.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
 		}
 		else if(typeObj == Cd.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Prix", "Nombre de pistes", "Durée"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Prix", "Nombre de pistes", "Durée"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution"};
 		}
 		else if(typeObj == CoffretDvd.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
-				return lbls;
-			}		
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution"};	
 		}
 		else if(typeObj == Dvd.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
-				return lbls;
-			}		
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Durée", "Prix"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Durée"};
 		}
 		else if(typeObj == Livre.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
-				return lbls;
-			}		
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};	
 		}
 		else if(typeObj == Magazine.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution","Prix"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution","Prix"};
+			else
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Mode de parution"};
 		}
 		else if(typeObj == Piste.class) {
-			if(!editable) {
-				String[] lbls = {"Numéro", "Titre", "Durée"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"Numéro", "Titre", "Durée"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"Numéro", "Titre", "Durée"};
+			else
+				return new String[]{"Numéro", "Titre", "Durée"};
 		}
 		else if(typeObj == Emprunt.class) {
-			if(!editable) {
-				String[] lbls = {"ISBN", "Titre du média", "Identifiant emprunteur","Nom de l'emprunteur", "Date début emprunt", "Date retour limite", "Date retour"};
-				return lbls;
-			}
-			else {
-				String[] lbls = {"ISBN du média", "Identifiant emprunteur"};
-				return lbls;
-			}
+			if(!editable)
+				return new String[]{"ISBN", "Titre du média", "Identifiant emprunteur","Nom de l'emprunteur", "Date début emprunt", "Date retour limite", "Date retour"};
+			else
+				return new String[]{"ISBN du média", "Identifiant emprunteur"};
+		}
+		else if(typeObj == Media.class) {
+			return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Prix"};
 		}
 		else {
 			throw new IllegalArgumentException("Classe non répertoriée");
 		}
+	}
+
+	public static void updateObject(Object o) {
+		db.updateObject(o);
 	}
 }
