@@ -43,7 +43,14 @@ public class AjoutDialog extends JDialog implements ActionListener {
 	private String[] labels;
 	private Class<?> typeObj;
 	private boolean save = true;
+	private Object objectToEdit = null;
 
+	/**
+	 * Premier constructeur destiné à l'ajout d'un nouveau média ou membre
+	 * @param titreFrame
+	 * @param typeObj
+	 * @param parent
+	 */
 	public AjoutDialog(String titreFrame, Class<?> typeObj, JDialog parent) {
 
 		super(parent, titreFrame, true);
@@ -57,6 +64,54 @@ public class AjoutDialog extends JDialog implements ActionListener {
 		listDvds = new ArrayList<Dvd>();
 		listPistes = new ArrayList<Piste>();
 	}
+	
+	/**
+	 * Deuxième constructeur destiné à la modification d'un media ou d'un membre déjà existant
+	 * @param titreFrame
+	 * @param typeObj
+	 * @param parent
+	 * @param objectToEdit
+	 */
+	public AjoutDialog(String titreFrame, Class<?> typeObj, JDialog parent, Object objectToEdit) {
+		this(titreFrame, typeObj, parent);
+		
+		this.objectToEdit = objectToEdit;
+
+		if(objectToEdit instanceof Abonne) {
+			Abonne o = (Abonne) objectToEdit;
+			form.presetFieldValues(new String[]{String.valueOf(o.getIdentifiant()), o.getNom(), o.getPrenom(), o.getStringDateNaissance()});
+		}
+		else if(objectToEdit instanceof Personnel) {
+			Personnel o = (Personnel) objectToEdit;
+			form.presetFieldValues(new String[]{String.valueOf(o.getIdentifiant()), o.getNom(), o.getPrenom(), o.getStringDateNaissance(), o.getPoste()});
+		}
+		else if(objectToEdit instanceof AudioLivre) {
+			AudioLivre o = (AudioLivre) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
+		}
+		else if(objectToEdit instanceof Cd) {
+			Cd o = (Cd) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
+			listPistes = o.getPistes();
+		}
+		else if(objectToEdit instanceof CoffretDvd) {
+			CoffretDvd o = (CoffretDvd) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
+			listDvds = o.getDvds();
+		}
+		else if(objectToEdit instanceof Dvd) {
+			Dvd o = (Dvd) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
+		}
+		else if(objectToEdit instanceof Livre) {
+			Livre o = (Livre) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
+		}
+		else if(objectToEdit instanceof Magazine) {
+			Magazine o = (Magazine) objectToEdit;
+			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
+		}
+	}
 
 	private void buildInterface() {
 	//	setSize(400, 350);
@@ -69,7 +124,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 		
 		// Boutons
 		panelButton = new JPanel();
-		btnAjouter = new JButton("Ajouter");
+		btnAjouter = new JButton("Valider");
 		btnAnnuler = new JButton("Annuler");
 		
 		panelButton.add(btnAjouter);
@@ -109,7 +164,6 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				
 			}
 		}
-		
 		
 		setContentPane(container);
 		
@@ -176,30 +230,37 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				auteur = form.getFieldText(1);
 				titre = form.getFieldText(2);
 				dateParution = null;
-				try {
-					dateParution = Bibliotheque.stringToDate(form.getFieldText(3));
-				} catch (ParseException e1) {
-					err = true;
-				}
 				
-				// Valeurs spécifiques
-				if(typeObj == AudioLivre.class || typeObj == Livre.class || typeObj == Magazine.class) {
+				if(Bibliotheque.getMediaByIsbn(isbn) != null) {
+					err = true;
+					JOptionPane.showMessageDialog(this, "Un média avec ce même ISBN existe déjà","Erreur", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
 					try {
-						nbPages = Integer.parseInt(form.getFieldText(4));
-					}
-					catch (NumberFormatException nfe) {
+						dateParution = Bibliotheque.stringToDate(form.getFieldText(3));
+					} catch (ParseException e1) {
 						err = true;
 					}
 					
-					if(typeObj == Magazine.class)
-						modeParution = form.getFieldText(5);
-				}
-				else if(typeObj == Dvd.class || typeObj == CoffretDvd.class){
-					try {
-						duree = Integer.parseInt(form.getFieldText(4));
+					// Valeurs spécifiques
+					if(typeObj == AudioLivre.class || typeObj == Livre.class || typeObj == Magazine.class) {
+						try {
+							nbPages = Integer.parseInt(form.getFieldText(4));
+						}
+						catch (NumberFormatException nfe) {
+							err = true;
+						}
+						
+						if(typeObj == Magazine.class)
+							modeParution = form.getFieldText(5);
 					}
-					catch (NumberFormatException nfe) {
-						err = true;
+					else if(typeObj == Dvd.class){
+						try {
+							duree = Integer.parseInt(form.getFieldText(4));
+						}
+						catch (NumberFormatException nfe) {
+							err = true;
+						}
 					}
 				}
 			}
@@ -207,7 +268,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 			if(err) { // Message d'erreur
 				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
-			else if(save){ // Ajout de l'objet dans la base
+			else if(objectToEdit == null) { // Ajout de l'objet dans la base
 				if(this.typeObj == Abonne.class)
 					Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
 				else if(this.typeObj == Personnel.class)
@@ -229,8 +290,11 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				
 				dispose(); // On ferme la fenetre
 			}
-			else {
+			else { // L'objet n'est pas null, dans ce cas il s'agit d'une modification
+				Bibliotheque.updateObject(objectToEdit);
+				
 				retStatus = BiblioDialog.RET_OK;
+				
 				dispose(); // On ferme la fenetre
 			}
 		
