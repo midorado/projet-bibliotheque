@@ -254,8 +254,12 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				JOptionPane.showConfirmDialog(this, "Veuillez sélectionner une ligne avant de lancer la lecture", "Aucune ligne sélectionnée", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
 			}
 			else {
-				if(Bibliotheque.getMediaByIsbn((String) pnlData.getTable().getValueAt(selectedRow, 0)) instanceof Livre) {
-					Livre l = (Livre) Bibliotheque.getMediaByIsbn((String) pnlData.getTable().getValueAt(selectedRow, 0));
+				String isbn = (String) pnlData.getTable().getValueAt(selectedRow, 0);
+				if(Bibliotheque.isEnCoursDemprunt(isbn)) {
+					JOptionPane.showConfirmDialog(this, "Le média que vous avez sélectionné est déjà en cours d'emprunt", "Lecture impossible", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+				}
+				else if(Bibliotheque.getMediaByIsbn(isbn) instanceof Livre) {
+					Livre l = (Livre) Bibliotheque.getMediaByIsbn(isbn);
 					
 					if(l.enLecture())
 						l.stopperLecture();
@@ -264,8 +268,8 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 					
 					Bibliotheque.updateMedia(l);
 				}
-				else if(Bibliotheque.getMediaByIsbn((String) pnlData.getTable().getValueAt(selectedRow, 0)) instanceof Livre) {
-					Cd cd = (Cd) Bibliotheque.getMediaByIsbn((String) pnlData.getTable().getValueAt(selectedRow, 0));
+				else if(Bibliotheque.getMediaByIsbn(isbn) instanceof Livre) {
+					Cd cd = (Cd) Bibliotheque.getMediaByIsbn(isbn);
 					
 					if(cd.enLecture()) 
 						cd.stopperLecture();

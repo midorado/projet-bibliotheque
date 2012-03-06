@@ -39,7 +39,7 @@ public class Bibliotheque {
 	public static void closeBibliotheque() {
 		System.out.print("Fermeture du programme en cours...");
 		db.closeDatabase();
-		System.out.println(" Ok !");
+		System.out.println(" Ok !"); 
 		System.exit(0);
 	}
 	
@@ -137,20 +137,30 @@ public class Bibliotheque {
 	 */
 	public static boolean isEmpruntable(String isbn) {
 		// Test si en cours d'emprunt
+		if(Bibliotheque.isEnCoursDemprunt(isbn))
+			return false;
+		
+		// Test si en cours de lecture s'il s'agit d'un livre ou d'un CD
+		if(Bibliotheque.getMediaByIsbn(isbn) instanceof Livre) {
+			Livre livre = (Livre) Bibliotheque.getMediaByIsbn(isbn);
+			if(livre.enLecture())
+				return false;
+		}
+		else if(Bibliotheque.getMediaByIsbn(isbn) instanceof Cd) {
+			Cd cd = (Cd) Bibliotheque.getMediaByIsbn(isbn);
+			if(cd.enLecture())
+				return false;
+		}
+
+		return true;
+	}
+	
+	public static boolean isEnCoursDemprunt(String isbn) {
 		for(Emprunt e : Bibliotheque.getListEmpruntsEnCours())
 			if(e.getMedia().getIsbn().equals(isbn))
-				return false;
+				return true;
 		
-		// Test si en cours de lecture pour les livre et les cd
-		for(Livre l : Bibliotheque.getListLivre())
-			if(l.enLecture())
-				return false;
-		
-		for(Cd c : Bibliotheque.getListCd())
-			if(c.enLecture())
-				return false;
-		
-		return true;
+		return false;
 	}
 	
 	public static int getNouvelIdMembre() {
@@ -295,7 +305,7 @@ public class Bibliotheque {
 			return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Prix"};
 		}
 		else {
-			throw new IllegalArgumentException("Classe non répertoriée");
+			throw new IllegalArgumentException("Classe non répertoriée"+typeObj.toString());
 		}
 	}
 
