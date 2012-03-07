@@ -58,8 +58,8 @@ public class Database {
 		List<Membre> result = db.query(new Predicate<Membre>() {
 			@Override
 			public boolean match(Membre m) {
-				return m.getNom().equals(rech) || 
-					   m.getPrenom().equals(rech) || 
+				return m.getNom().equalsIgnoreCase(rech) || 
+					   m.getPrenom().equalsIgnoreCase(rech) || 
 					   m.getNom().startsWith(rech) || 
 					   m.getPrenom().startsWith(rech);
 			}

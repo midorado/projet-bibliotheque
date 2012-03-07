@@ -1,8 +1,10 @@
 package vue;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,15 +26,16 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 	private int retStatus = -1;
 	private JButton btnValider;
 	private JButton btnAnnuler;
-	private String isbn;
+	private Media media;
 	private JTextField txtRechercheMembre;
 	private JButton btnRechercher;
 	private JComboBox comboResultMembre;
+	private List<Membre> resultMembres;
 	
 	public EmpruntDialog(JFrame parent, String isbn) {
 		super(parent, "Effecter un nouvel emprunt", true);
 		
-		this.isbn = isbn;
+		this.media = Bibliotheque.getMediaByIsbn(isbn);
 		
 		buildInterface();
 		buildEvents();
@@ -44,7 +47,10 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		
-		JLabel lblTitre = new JLabel("Emprunt du média "+this.isbn);
+		JPanel pnlTitre = new JPanel();
+		JLabel lblTitre = new JLabel("Emprunt du média ["+media.getIsbn()+"] "+media.getTitre()+" ("+media.getPrix()+"€)");
+		lblTitre.setFont(new Font("Arial", Font.BOLD, 15));
+		pnlTitre.add(lblTitre);
 		
 		JLabel lblRechercheMembre = new JLabel("Rechercher un membre : ");
 		txtRechercheMembre = new JTextField(20);
@@ -65,7 +71,7 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 		pnlButtons.add(btnValider);
 		pnlButtons.add(btnAnnuler);
 		
-		getContentPane().add(lblTitre, BorderLayout.NORTH);
+		getContentPane().add(pnlTitre, BorderLayout.NORTH);
 		getContentPane().add(pnlRecherche, BorderLayout.CENTER);
 		getContentPane().add(pnlButtons, BorderLayout.SOUTH);
 		
@@ -85,10 +91,18 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == btnRechercher) {
+			comboResultMembre.removeAllItems();
+			
 			String recherche = txtRechercheMembre.getText();
 			
 			if(!recherche.isEmpty()) {
+				resultMembres = Bibliotheque.rechercheMembre(recherche);
 				
+				if(resultMembres != null && !resultMembres.isEmpty())
+				for(Membre m : resultMembres) {
+					String item = m.getIdentifiant()+" - "+m.getPrenom()+" "+m.getNom()+" ("+m.getStringDateNaissance()+")";
+					comboResultMembre.addItem(item);
+				}
 			}
 		}
 		else if(e.getSource() == btnAnnuler) {
@@ -97,6 +111,23 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 			dispose();
 		}
 		else if(e.getSource() == btnValider) {
+			int selectedIndex = comboResultMembre.getSelectedIndex();
+	
+			if(selectedIndex != -1) {
+				int idMembre = resultMembres.get(selectedIndex).getIdentifiant();
+				// On vérifie que le média n'est pas en cours d'emprunt ou d'écoute/lecture
+				if(!Bibliotheque.isEmpruntable(media.getIsbn())) {
+					JOptionPane.showConfirmDialog(this, "Le média est déjà en cours d'emprunt ou en cours d'écoute", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
+				}
+				else if(Bibliotheque.nouvelEmprunt(media.getIsbn(), idMembre)) { // Tout est OK en principe !
+					this.retStatus = BiblioDialog.RET_OK; 	// On informe la frame parente que tout est OK
+					this.dispose();
+				}
+				else {	
+					System.out.println("Emprunt impossible... WHY ???");
+				}
+			}
+		//	int id = -1
 		/*	// On récupère les champs
 			String isbn = form.getFieldText(0);
 			int id = -1;

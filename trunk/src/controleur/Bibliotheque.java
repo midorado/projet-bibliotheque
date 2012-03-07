@@ -51,6 +51,10 @@ public class Bibliotheque {
 		db.storeObject(m);
 	}
 	
+	public static List<Membre> rechercheMembre(String recherche) {
+		return db.rechercheMembre(recherche);
+	}
+	
 	public static Membre getMembreById(int id) {
 		List<Membre> listMembres = (List<Membre>) db.getList(Membre.class);
 		
