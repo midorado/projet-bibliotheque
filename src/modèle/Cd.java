@@ -14,14 +14,7 @@ public class Cd extends AudioVisuel {
 	
 		this.enLecture = false;
 		this.pistes = pistes;
-		
-		int duree = 0;
-		
-		if(this.pistes != null) {
-			for(Piste p : this.pistes)
-				duree += p.getDuree();
-		}
-		super.setDuree(duree);
+
 	}
 
 	@Override
@@ -34,12 +27,29 @@ public class Cd extends AudioVisuel {
 		return prix;
 	}
 	
+	@Override
+	public int getDuree() {
+		int duree = 0;
+		
+		if(this.pistes != null) {
+			for(Piste p : this.pistes)
+				duree += p.getDuree();
+		}
+		
+		setDuree(duree);
+		return duree;
+	}
+	
 	public int getNbPistes() {
 		return pistes.size();
 	}
 	
 	public List<Piste> getPistes() {
 		return this.pistes;
+	}
+	
+	public void setPistes(List<Piste> pistes) {
+		this.pistes = pistes;
 	}
 	
 	public boolean enLecture(){

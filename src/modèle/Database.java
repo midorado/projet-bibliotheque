@@ -21,10 +21,17 @@ public class Database {
 	 */
 	public void openDatabase() {
 		config = (EmbeddedConfiguration) Db4oEmbedded.newConfiguration();
+		
+		// La mise à jour en cascade permet de mettre à jour les objets créés dans des objets
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
         config.common().objectClass(Membre.class).cascadeOnUpdate(true);
         config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
-        db = Db4oEmbedded.openFile(config, PATH_DATABASE); // Ouvre ou cré et ouvre la base
+        config.common().objectClass(Cd.class).cascadeOnUpdate(true);
+        config.common().objectClass(CoffretDvd.class).cascadeOnUpdate(true);
+        config.common().objectClass(Cd.class).cascadeOnDelete(true);
+        config.common().objectClass(CoffretDvd.class).cascadeOnDelete(true);
+        
+        db = Db4oEmbedded.openFile(config, PATH_DATABASE); // Ouvre ou créé et ouvre la base
 	}
 	
 	/**
@@ -45,6 +52,20 @@ public class Database {
 	
 	public void removeObject(Object o) {
 		db.delete(o);
+	}
+	
+	public List<Membre> rechercheMembre(final String rech) {
+		List<Membre> result = db.query(new Predicate<Membre>() {
+			@Override
+			public boolean match(Membre m) {
+				return m.getNom().equals(rech) || 
+					   m.getPrenom().equals(rech) || 
+					   m.getNom().startsWith(rech) || 
+					   m.getPrenom().startsWith(rech);
+			}
+		});
+		
+		return result;
 	}
 	
 	/**
@@ -122,7 +143,7 @@ public class Database {
 	 * @return
 	 */
 	public Membre getMembreById(final int id) {
-		
+
 		ObjectSet<Membre> result = db.query(new Predicate<Membre>() {
 			@Override
 			public boolean match(Membre m) {

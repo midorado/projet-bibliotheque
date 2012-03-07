@@ -183,7 +183,12 @@ public class ListePanel extends JPanel {
 				
 			}
 			
-			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels));
+			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels) {
+				@Override
+	            public boolean isCellEditable(int row, int column) {
+	                return false;
+	            }
+			});
 		}
 	}
 	
@@ -206,7 +211,12 @@ public class ListePanel extends JPanel {
 				mesDonnees[i][4] = String.valueOf(m.getPrix());
 			}
 			
-			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels));
+			this.table.setModel(new DefaultTableModel(mesDonnees, mesLabels) {
+				@Override
+	            public boolean isCellEditable(int row, int column) {
+	                return false;
+	            }
+			});
 		}
 		
 	}
