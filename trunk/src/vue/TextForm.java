@@ -3,6 +3,7 @@ package vue;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.util.Arrays;
 
 import javax.print.attribute.standard.Media;
 import javax.swing.JLabel;
@@ -54,10 +55,15 @@ public class TextForm extends JPanel {
 		return this.fields[i].getText();
 	}
 
+	/**
+	 * Prérempli les champs du formulaire lors d'une modification
+	 * @param values
+	 */
 	public void presetFieldValues(String[] values) {
-		if(values.length != fields.length)
+		System.out.println(Arrays.toString(values));
+	/*	if(values.length != fields.length)
 			throw new IllegalArgumentException("Il doit y avoir autant de champs que de valeurs !");
-	
+	*/
 		for(int i=0; i<values.length; i++)
 			this.fields[i].setText(values[i]);
 

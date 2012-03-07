@@ -28,9 +28,10 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
   
 	String[] firstItem = {"Livre", "Abonné", "En cours", "En lecture"};
 	JTabbedPane pnlOnglet;
-	JComboBox<String> listeItems;
+	JComboBox listeItems;
 	ListePanel pnlData;
 	JPanel pnlActionButtons;
+	JButton btnEmprunter;
 	JButton btnAjouter;
 	JButton btnSupprimer;
 	JButton btnModifier;
@@ -58,6 +59,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		pnlOnglet.addTab("Emprunts", null);
 		pnlOnglet.addTab("Lectures en cours", null);
 		
+		btnEmprunter = new JButton("Emprunter");
 		btnAjouter = new JButton("Ajouter");
 		btnSupprimer = new JButton("Supprimer");
 		btnModifier = new JButton("Modifier");
@@ -69,10 +71,14 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		pnlActionButtons.add(btnSupprimer);
 		pnlActionButtons.add(btnLecture);
 		
+		JPanel pnlButtons = new JPanel(new BorderLayout());
+		pnlButtons.add(btnEmprunter, BorderLayout.NORTH);
+		pnlButtons.add(pnlActionButtons, BorderLayout.CENTER);
+		
 		pnlData.add(listeItems, BorderLayout.NORTH);
 		
 		this.add(pnlOnglet);
-		this.add(pnlActionButtons,BorderLayout.SOUTH);
+		this.add(pnlButtons,BorderLayout.SOUTH);
 
 		this.pack();
 	}
@@ -84,6 +90,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		btnSupprimer.addActionListener(this);
 		btnModifier.addActionListener(this);
 		btnLecture.addActionListener(this);
+		btnEmprunter.addActionListener(this);
 		
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -102,32 +109,45 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		int selectedIndex = this.pnlOnglet.getSelectedIndex();
 		int selectedRow = pnlData.getTable().getSelectedRow();
 		
+		/* ===== Bouton EMPRUNTER ===== */
+		if(e.getSource() == this.btnEmprunter) {
+			if(selectedRow == -1) { // Si aucune ligne n'est sélectionnée
+				JOptionPane.showConfirmDialog(this, "Veuillez sélectionner une ligne avant d'effectuer un emprunt", "Aucune ligne sélectionnée", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
+			}
+			else {
+				String isbn = (String) pnlData.getTable().getValueAt(selectedRow, 0);
+				
+				EmpruntDialog empdial = new EmpruntDialog(this, isbn);
+				empdial.setVisible(true);
+				
+			}
+		}
 		/* ===== Bouton AJOUTER ===== */
-		if(e.getSource() == this.btnAjouter) { 
+		else if(e.getSource() == this.btnAjouter) {
 			AjoutDialog ajd = null;
 			
 			// Média
 			if(selectedIndex == 0) {
 				
 				if(selectedItem.equals("Livre"))
-					ajd = new AjoutDialog("Ajouter un livre", Livre.class, null);					
+					ajd = new AjoutDialog("Ajouter un livre", Livre.class);					
 				else if(selectedItem.equals("Magazine"))
-					ajd = new AjoutDialog("Ajouter un magazine", Magazine.class, null);
+					ajd = new AjoutDialog("Ajouter un magazine", Magazine.class);
 				else if(selectedItem.equals("CD"))
-					ajd = new AjoutDialog("Ajouter un CD", Cd.class, null);
+					ajd = new AjoutDialog("Ajouter un CD", Cd.class);
 				else if(selectedItem.equals("DVD"))
-					ajd = new AjoutDialog("Ajouter un DVD", Dvd.class, null);
+					ajd = new AjoutDialog("Ajouter un DVD", Dvd.class);
 				else if(selectedItem.equals("Coffret DVD"))
-					ajd = new AjoutDialog("Ajouter un coffret DVD", CoffretDvd.class, null);
+					ajd = new AjoutDialog("Ajouter un coffret DVD", CoffretDvd.class);
 				else if(selectedItem.equals("AudioLivre"))
-					ajd = new AjoutDialog("Ajouter un audiolivre", AudioLivre.class, null);
+					ajd = new AjoutDialog("Ajouter un audiolivre", AudioLivre.class);
 			}
 			// Membre
 			else if(selectedIndex == 1) {
 				if(selectedItem == "Abonné")
-					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class, null);
+					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class);
 				else if(selectedItem == "Personnel")
-					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class, null);
+					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class);
 			}
 			
 			if(selectedIndex == 0 || selectedIndex == 1) {
@@ -135,18 +155,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				
 				if(ajd.getReturnStatus() == BiblioDialog.RET_OK) // Si l'objet à été ajouté
 					refreshComponents((String) selectedItem); // On met à jour la JTable
-			}
-			
-			// Emprunt
-			else if(selectedIndex == 2) {
-				EmpruntDialog empdial = new EmpruntDialog(this);
-				empdial.setVisible(true);
-				
-				if(empdial.getReturnStatus() == BiblioDialog.RET_OK)
-					refreshComponents((String) selectedItem);
-				
-			}
-			
+			}			
 		}
 		
 		/* ===== Bouton MODIFIER ===== */
@@ -155,25 +164,25 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				JOptionPane.showConfirmDialog(this, "Veuillez sélectionner une ligne avant de la modifier", "Aucune ligne sélectionnée", JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
 			}
 			
-			AjoutDialog ajd = null;
+			EditDialog ajd = null;
 			
 			// Média
 			if(selectedIndex == 0) {
 				String isbn = (String) pnlData.getTable().getValueAt(selectedRow, 0);
 				Media m = Bibliotheque.getMediaByIsbn(isbn);
-				
+
 				if(selectedItem.equals("Livre"))
-					ajd = new AjoutDialog("Modifier un livre", Livre.class, null, m);					
+					ajd = new EditDialog("Modifier un livre", m);					
 				else if(selectedItem.equals("Magazine"))
-					ajd = new AjoutDialog("Modifier un magazine", Magazine.class, null, m);
+					ajd = new EditDialog("Modifier un magazine", m);
 				else if(selectedItem.equals("CD"))
-					ajd = new AjoutDialog("Modifier un CD", Cd.class, null, m);
+					ajd = new EditDialog("Modifier un CD", m);
 				else if(selectedItem.equals("DVD"))
-					ajd = new AjoutDialog("Modifier un DVD", Dvd.class, null, m);
+					ajd = new EditDialog("Modifier un DVD", m);
 				else if(selectedItem.equals("Coffret DVD"))
-					ajd = new AjoutDialog("Modifier un coffret DVD", CoffretDvd.class, null, m);
+					ajd = new EditDialog("Modifier un coffret DVD", m);
 				else if(selectedItem.equals("AudioLivre"))
-					ajd = new AjoutDialog("Modifier un audiolivre", AudioLivre.class, null, m);
+					ajd = new EditDialog("Modifier un audiolivre", m);
 
 			}
 			// Membre
@@ -182,9 +191,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				Membre m = Bibliotheque.getMembreById(id);
 				
 				if(selectedItem == "Abonné")
-					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class, null, m);
+					ajd = new EditDialog("Ajouter un abonné", m);
 				else if(selectedItem == "Personnel")
-					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class, null, m);
+					ajd = new EditDialog("Ajouter un membre du personnel", m);
 			}
 			
 			if(selectedIndex == 0 || selectedIndex == 1) {
@@ -321,24 +330,28 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(true);
 				listeItems.setVisible(true);
+				btnEmprunter.setVisible(true);
 			break;
 		case 1: btnAjouter.setVisible(true);
 				btnModifier.setVisible(true);
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(false);
 				listeItems.setVisible(true);
+				btnEmprunter.setVisible(false);
 			break;
-		case 2: btnAjouter.setVisible(true);
+		case 2: btnAjouter.setVisible(false);
 				btnModifier.setVisible(false);
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(false);
 				listeItems.setVisible(true);
+				btnEmprunter.setVisible(false);
 			break;
 		case 3: btnAjouter.setVisible(false);
 				btnModifier.setVisible(false);
 				btnSupprimer.setVisible(false);
 				btnLecture.setVisible(true);
 				listeItems.setVisible(false);
+				btnEmprunter.setVisible(false);
 			break;
 		}
 	}

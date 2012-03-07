@@ -5,12 +5,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import modèle.Media;
 import modèle.Membre;
@@ -19,14 +21,18 @@ import controleur.Bibliotheque;
 
 public class EmpruntDialog extends JDialog implements ActionListener {
 
-	private String[] labels = {"ISBN média", "Identifiant membre"};
 	private int retStatus = -1;
-	private TextForm form;
 	private JButton btnValider;
 	private JButton btnAnnuler;
+	private String isbn;
+	private JTextField txtRechercheMembre;
+	private JButton btnRechercher;
+	private JComboBox comboResultMembre;
 	
-	public EmpruntDialog(JFrame parent) {
+	public EmpruntDialog(JFrame parent, String isbn) {
 		super(parent, "Effecter un nouvel emprunt", true);
+		
+		this.isbn = isbn;
 		
 		buildInterface();
 		buildEvents();
@@ -38,7 +44,19 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 		setLocationRelativeTo(null);
 		setResizable(false);
 		
-		this.form = new TextForm(this.labels);
+		JLabel lblTitre = new JLabel("Emprunt du média "+this.isbn);
+		
+		JLabel lblRechercheMembre = new JLabel("Rechercher un membre : ");
+		txtRechercheMembre = new JTextField(20);
+		btnRechercher = new JButton("Rechercher");
+		comboResultMembre = new JComboBox();
+		
+		JPanel pnlRecherche = new JPanel(new BorderLayout());
+		pnlRecherche.add(lblRechercheMembre, BorderLayout.WEST);
+		pnlRecherche.add(txtRechercheMembre, BorderLayout.CENTER);
+		pnlRecherche.add(btnRechercher, BorderLayout.EAST);
+		pnlRecherche.add(comboResultMembre, BorderLayout.SOUTH);
+		
 		
 		JPanel pnlButtons = new JPanel();
 		this.btnValider = new JButton("Emprunter");
@@ -47,7 +65,8 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 		pnlButtons.add(btnValider);
 		pnlButtons.add(btnAnnuler);
 		
-		getContentPane().add(form, BorderLayout.NORTH);
+		getContentPane().add(lblTitre, BorderLayout.NORTH);
+		getContentPane().add(pnlRecherche, BorderLayout.CENTER);
 		getContentPane().add(pnlButtons, BorderLayout.SOUTH);
 		
 		pack();
@@ -56,6 +75,7 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 	private void buildEvents() {
 		btnValider.addActionListener(this);
 		btnAnnuler.addActionListener(this);
+		btnRechercher.addActionListener(this);
 	}
 	
 	public int getReturnStatus() {
@@ -64,13 +84,20 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnAnnuler) {
+		if(e.getSource() == btnRechercher) {
+			String recherche = txtRechercheMembre.getText();
+			
+			if(!recherche.isEmpty()) {
+				
+			}
+		}
+		else if(e.getSource() == btnAnnuler) {
 			this.retStatus = BiblioDialog.RET_CANCEL;
 			setVisible(false);
 			dispose();
 		}
 		else if(e.getSource() == btnValider) {
-			// On récupère les champs
+		/*	// On récupère les champs
 			String isbn = form.getFieldText(0);
 			int id = -1;
 			
@@ -97,7 +124,7 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 			}
 			catch(NumberFormatException nfe) {
 				JOptionPane.showConfirmDialog(this, "L'identifiant du membre doit être un nombre", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
-			}				
+			}	*/			
 		}
 	}
 }

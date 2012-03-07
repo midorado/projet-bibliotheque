@@ -1,20 +1,14 @@
 package vue;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import modèle.Abonne;
 import modèle.AudioLivre;
@@ -25,170 +19,22 @@ import modèle.Livre;
 import modèle.Magazine;
 import modèle.Personnel;
 import modèle.Piste;
-
 import controleur.Bibliotheque;
 
-public class AjoutDialog extends JDialog implements ActionListener {
-	
-	private int retStatus = -1;
-	private JPanel container;
-	private JPanel panelButton;
-	private JButton btnAjouter;
-	private JButton btnAnnuler;
-	private JButton btnAjoutDvdOuPiste; // Pour les CD ou les DVD
-	private JLabel lblListeDvdOuPiste; // idem
-	private List<Dvd> listDvds;
-	private List<Piste> listPistes;
-	private TextForm form;
-	private String[] labels;
-	private Class<?> typeObj;
-	private boolean save = true;
-	private Object objectToEdit = null;
+public class AjoutDialog extends BiblioDialog implements ActionListener {
 
-	/**
-	 * Premier constructeur destiné à l'ajout d'un nouveau média ou membre
-	 * @param titreFrame
-	 * @param typeObj
-	 * @param parent
-	 */
-	public AjoutDialog(String titreFrame, Class<?> typeObj, JDialog parent) {
-
-		super(parent, titreFrame, true);
+	public AjoutDialog(String titreFrame, Class<?> typeObj) {
+		super(titreFrame, null, typeObj);
 		
-		this.typeObj = typeObj;
-		
-		buildInterface();
-		
-		buildEvents();
-		
-		listDvds = new ArrayList<Dvd>();
-		listPistes = new ArrayList<Piste>();
-	}
-	
-	/**
-	 * Deuxième constructeur destiné à la modification d'un media ou d'un membre déjà existant
-	 * @param titreFrame
-	 * @param typeObj
-	 * @param parent
-	 * @param objectToEdit
-	 */
-	public AjoutDialog(String titreFrame, Class<?> typeObj, JDialog parent, Object objectToEdit) {
-		this(titreFrame, typeObj, parent);
-		
-		this.objectToEdit = objectToEdit;
-
-		if(objectToEdit instanceof Abonne) {
-			Abonne o = (Abonne) objectToEdit;
-			form.presetFieldValues(new String[]{String.valueOf(o.getIdentifiant()), o.getNom(), o.getPrenom(), o.getStringDateNaissance()});
-		}
-		else if(objectToEdit instanceof Personnel) {
-			Personnel o = (Personnel) objectToEdit;
-			form.presetFieldValues(new String[]{String.valueOf(o.getIdentifiant()), o.getNom(), o.getPrenom(), o.getStringDateNaissance(), o.getPoste()});
-		}
-		else if(objectToEdit instanceof AudioLivre) {
-			AudioLivre o = (AudioLivre) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
-		}
-		else if(objectToEdit instanceof Cd) {
-			Cd o = (Cd) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
-			listPistes = o.getPistes();
-		}
-		else if(objectToEdit instanceof CoffretDvd) {
-			CoffretDvd o = (CoffretDvd) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
-			listDvds = o.getDvds();
-		}
-		else if(objectToEdit instanceof Dvd) {
-			Dvd o = (Dvd) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution()});
-		}
-		else if(objectToEdit instanceof Livre) {
-			Livre o = (Livre) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
-		}
-		else if(objectToEdit instanceof Magazine) {
-			Magazine o = (Magazine) objectToEdit;
-			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
-		}
+		super.listDvds = new ArrayList<Dvd>();
+		super.listPistes = new ArrayList<Piste>();
 	}
 
-	private void buildInterface() {
-	//	setSize(400, 350);
-		setLocationRelativeTo(null);
-	//	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setResizable(false);
-		
-		container = new JPanel();
-		container.setLayout(new BorderLayout());
-		
-		// Boutons
-		panelButton = new JPanel();
-		btnAjouter = new JButton("Valider");
-		btnAnnuler = new JButton("Annuler");
-		
-		panelButton.add(btnAjouter);
-		panelButton.add(btnAnnuler);
-		
-		container.add(panelButton, BorderLayout.SOUTH);
-		
-		// Récupération des labels en fonction du type d'objet
-		labels = Bibliotheque.getLabelValues(typeObj, true);
-
-		form = new TextForm(labels);
-		
-		container.add(form, BorderLayout.NORTH);
-		
-
-		// Bouton ajouter Dvd ou ajouter Piste et label pour afficher la liste
-		this.btnAjoutDvdOuPiste = new JButton();
-		if(typeObj == CoffretDvd.class || typeObj == Cd.class) {
-	
-			JPanel panAjoutDvdOuPiste = new JPanel(new BorderLayout());
-			
-			this.btnAjoutDvdOuPiste = new JButton();
-			this.lblListeDvdOuPiste = new JLabel();
-			
-			panAjoutDvdOuPiste.add(lblListeDvdOuPiste, BorderLayout.NORTH);
-			panAjoutDvdOuPiste.add(btnAjoutDvdOuPiste, BorderLayout.SOUTH);
-		
-			container.add(panAjoutDvdOuPiste);			
-			
-			if(typeObj == CoffretDvd.class) {
-				this.btnAjoutDvdOuPiste.setText("Ajouter des DVD au coffret");
-				this.lblListeDvdOuPiste.setText("<html>DVD du coffret :");
-			}
-			else if(typeObj == Cd.class) {
-				this.btnAjoutDvdOuPiste.setText("Ajout des pistes au CD");
-				this.lblListeDvdOuPiste.setText("<html>Pistes du CD :");
-				
-			}
-		}
-		
-		setContentPane(container);
-		
-		pack();
-	}
-	
-	private void buildEvents() {
-		btnAjouter.addActionListener(this);
-		btnAnnuler.addActionListener(this);
-		btnAjoutDvdOuPiste.addActionListener(this);
-	}
-	
-	
-	public int getReturnStatus() {
-		return retStatus;
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == btnAnnuler) {
-			this.retStatus = BiblioDialog.RET_CANCEL;
-			setVisible(false);
-			dispose();
-		}
-		else if(e.getSource() == btnAjouter) {
+		super.actionPerformed(e);
+		
+		if(e.getSource() == super.btnValider) {
 			boolean err = false;
 			
 			// Déclaration des variables
@@ -198,6 +44,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 			
 			if(this.typeObj == Abonne.class || this.typeObj == Personnel.class) {
 				// Valeurs communes aux membres
+			/***********************************************/
 				id = Bibliotheque.getNouvelIdMembre();
 				nom = form.getFieldText(0);
 				prenom = form.getFieldText(1);
@@ -268,7 +115,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 			if(err) { // Message d'erreur
 				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
-			else if(objectToEdit == null) { // Ajout de l'objet dans la base
+			else { // Ajout de l'objet dans la base
 				if(this.typeObj == Abonne.class)
 					Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
 				else if(this.typeObj == Personnel.class)
@@ -290,18 +137,10 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				
 				dispose(); // On ferme la fenetre
 			}
-			else { // L'objet n'est pas null, dans ce cas il s'agit d'une modification
-				Bibliotheque.updateObject(objectToEdit);
-				
-				retStatus = BiblioDialog.RET_OK;
-				
-				dispose(); // On ferme la fenetre
-			}
-		
 		}
 		else if(e.getSource() == btnAjoutDvdOuPiste) {
 			if(this.typeObj == CoffretDvd.class) {
-				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class, this);
+				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class);
 				frameDvd.setVisible(true);
 				
 				if(frameDvd.getReturnStatus() == BiblioDialog.RET_OK) {
@@ -321,15 +160,15 @@ public class AjoutDialog extends JDialog implements ActionListener {
 					Dvd d = new Dvd(isbn, auteur, titre, dateParution, duree);
 					listDvds.add(d);
 					
-					// MAJ de l'UI
-					this.lblListeDvdOuPiste.setText(this.lblListeDvdOuPiste.getText()+"<br /> - "+d.getTitre());
+					// MAJ de la JList
+					super.listModel.addElement(d.getTitre());
 
 					pack();
 				}
 				
 			}
 			else if(this.typeObj == Cd.class) {
-				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class, this);
+				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class);
 				framePiste.setVisible(true);
 				
 				if(framePiste.getReturnStatus() == BiblioDialog.RET_OK) {
@@ -341,9 +180,10 @@ public class AjoutDialog extends JDialog implements ActionListener {
 				
 					Piste p = new Piste(numero, titre, duree);
 					listPistes.add(p);
-					
-					// MAJ de l'UI
-					this.lblListeDvdOuPiste.setText(this.lblListeDvdOuPiste.getText()+"<br /> - "+p.getNumero()+" "+p.getTitre());
+					for(Piste p2 : listPistes)
+						System.out.println(p2.getTitre());
+					// MAJ de la JList
+					super.listModel.addElement(p.getNumero()+" - "+p.getTitre());
 
 					pack();
 				}
@@ -351,27 +191,7 @@ public class AjoutDialog extends JDialog implements ActionListener {
 			else {
 				throw new IllegalArgumentException("La classe doit être de type CoffretDvd ou Cd");
 			}
+		
 		}
 	}
-	
-	public void dontSave() {
-		this.save = false;
-	}
-
-	public TextForm getForm() {
-		return form;
-	}
-
-	public void setForm(TextForm form) {
-		this.form = form;
-	}
-	
-	public Class<?> getTypeObj() {
-		return typeObj;
-	}
-
-	public void setTypeObj(Class<?> typeObj) {
-		this.typeObj = typeObj;
-	}
-
 }
