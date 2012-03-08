@@ -22,12 +22,12 @@ import javax.swing.ListSelectionModel;
 
 import controleur.Bibliotheque;
 
-import modèle.AudioLivre;
-import modèle.Cd;
-import modèle.CoffretDvd;
-import modèle.Dvd;
-import modèle.Media;
-import modèle.Piste;
+import modele.AudioLivre;
+import modele.Cd;
+import modele.CoffretDvd;
+import modele.Dvd;
+import modele.Media;
+import modele.Piste;
 
 /**
  * 

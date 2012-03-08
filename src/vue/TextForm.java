@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import modèle.Membre;
+import modele.Membre;
 
 public class TextForm extends JPanel {
 

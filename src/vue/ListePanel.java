@@ -15,7 +15,7 @@ import javax.swing.text.DateFormatter;
 import controleur.Bibliotheque;
 
 
-import modèle.*;
+import modele.*;
 
 public class ListePanel extends JPanel {
 	

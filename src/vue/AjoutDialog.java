@@ -10,15 +10,15 @@ import java.util.Date;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
-import modèle.Abonne;
-import modèle.AudioLivre;
-import modèle.Cd;
-import modèle.CoffretDvd;
-import modèle.Dvd;
-import modèle.Livre;
-import modèle.Magazine;
-import modèle.Personnel;
-import modèle.Piste;
+import modele.Abonne;
+import modele.AudioLivre;
+import modele.Cd;
+import modele.CoffretDvd;
+import modele.Dvd;
+import modele.Livre;
+import modele.Magazine;
+import modele.Personnel;
+import modele.Piste;
 import controleur.Bibliotheque;
 
 public class AjoutDialog extends BiblioDialog implements ActionListener {

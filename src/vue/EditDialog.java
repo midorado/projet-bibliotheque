@@ -10,16 +10,16 @@ import javax.swing.JOptionPane;
 
 import controleur.Bibliotheque;
 
-import modèle.Abonne;
-import modèle.AudioLivre;
-import modèle.Cd;
-import modèle.CoffretDvd;
-import modèle.Dvd;
-import modèle.Livre;
-import modèle.Magazine;
-import modèle.Media;
-import modèle.Personnel;
-import modèle.Piste;
+import modele.Abonne;
+import modele.AudioLivre;
+import modele.Cd;
+import modele.CoffretDvd;
+import modele.Dvd;
+import modele.Livre;
+import modele.Magazine;
+import modele.Media;
+import modele.Personnel;
+import modele.Piste;
 
 public class EditDialog extends BiblioDialog implements ActionListener {
 

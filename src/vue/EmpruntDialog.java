@@ -15,8 +15,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import modèle.Media;
-import modèle.Membre;
+import modele.Media;
+import modele.Membre;
 
 import controleur.Bibliotheque;
 
