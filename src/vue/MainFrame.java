@@ -46,7 +46,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		this.setSize(400, 200);
 		
 		pnlOnglet = new JTabbedPane();
-		comboItems = new JComboBox<String>();
+		comboItems = new JComboBox();
 		setItemsComboBox(firstItem[0]);
 		
 		pnlData = new ListePanel(Bibliotheque.getListLivre()); // Par défaut au démarrage de l'appli
