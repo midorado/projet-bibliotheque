@@ -23,8 +23,8 @@ import controleur.Bibliotheque;
 
 public class AjoutDialog extends BiblioDialog implements ActionListener {
 
-	public AjoutDialog(String titreFrame, Class<?> typeObj) {
-		super(titreFrame, null, typeObj);
+	public AjoutDialog(String titreFrame, Class<?> typeObj, boolean save) {
+		super(titreFrame, null, typeObj, save);
 		
 		super.listDvds = new ArrayList<Dvd>();
 		super.listPistes = new ArrayList<Piste>();
@@ -116,22 +116,24 @@ public class AjoutDialog extends BiblioDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 			else { // Ajout de l'objet dans la base
-				if(this.typeObj == Abonne.class)
-					Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
-				else if(this.typeObj == Personnel.class)
-					Bibliotheque.addMembre(new Personnel(id, nom, prenom, dateNaiss, poste));
-				else if(this.typeObj == AudioLivre.class)
-					Bibliotheque.addMedia(new AudioLivre(isbn, auteur, titre, dateParution, nbPages, null));
-				else if(this.typeObj == Cd.class)
-					Bibliotheque.addMedia(new Cd(isbn, auteur, titre, dateParution, listPistes));
-				else if(this.typeObj == CoffretDvd.class)
-					Bibliotheque.addMedia(new CoffretDvd(isbn, auteur, titre, dateParution, listDvds));
-				else if(this.typeObj == Dvd.class)
-					Bibliotheque.addMedia(new Dvd(isbn, auteur, titre, dateParution, duree));
-				else if(this.typeObj == Livre.class)
-					Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
-				else if(this.typeObj == Magazine.class)
-					Bibliotheque.addMedia(new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution));
+				if(super.save) {
+					if(this.typeObj == Abonne.class)
+						Bibliotheque.addMembre(new Abonne(id, nom, prenom, dateNaiss));
+					else if(this.typeObj == Personnel.class)
+						Bibliotheque.addMembre(new Personnel(id, nom, prenom, dateNaiss, poste));
+					else if(this.typeObj == AudioLivre.class)
+						Bibliotheque.addMedia(new AudioLivre(isbn, auteur, titre, dateParution, nbPages, listPistes));
+					else if(this.typeObj == Cd.class)
+						Bibliotheque.addMedia(new Cd(isbn, auteur, titre, dateParution, listPistes));
+					else if(this.typeObj == CoffretDvd.class)
+						Bibliotheque.addMedia(new CoffretDvd(isbn, auteur, titre, dateParution, listDvds));
+					else if(this.typeObj == Dvd.class)
+						Bibliotheque.addMedia(new Dvd(isbn, auteur, titre, dateParution, duree));
+					else if(this.typeObj == Livre.class)
+						Bibliotheque.addMedia(new Livre(isbn, auteur, titre, dateParution, nbPages));
+					else if(this.typeObj == Magazine.class)
+						Bibliotheque.addMedia(new Magazine(isbn, auteur, titre, dateParution, nbPages, modeParution));
+				}
 				
 				retStatus = BiblioDialog.RET_OK;
 				
@@ -140,7 +142,7 @@ public class AjoutDialog extends BiblioDialog implements ActionListener {
 		}
 		else if(e.getSource() == btnAjoutDvdOuPiste) {
 			if(this.typeObj == CoffretDvd.class) {
-				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class);
+				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class, false);
 				frameDvd.setVisible(true);
 				
 				if(frameDvd.getReturnStatus() == BiblioDialog.RET_OK) {
@@ -161,14 +163,20 @@ public class AjoutDialog extends BiblioDialog implements ActionListener {
 					listDvds.add(d);
 					
 					// MAJ de la JList
-					super.listModel.addElement(d.getTitre());
+					super.refreshLstDvdOuPiste();
 
 					pack();
 				}
 				
 			}
-			else if(this.typeObj == Cd.class) {
-				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class);
+			else if(this.typeObj == Cd.class || this.typeObj == AudioLivre.class) {
+				AjoutDialog framePiste;
+				
+				if(this.typeObj == Cd.class)
+					framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class, false);
+				else
+					framePiste = new AjoutDialog("Ajouter des pistes à l'audiolivre", Piste.class, false);
+				
 				framePiste.setVisible(true);
 				
 				if(framePiste.getReturnStatus() == BiblioDialog.RET_OK) {
@@ -180,16 +188,15 @@ public class AjoutDialog extends BiblioDialog implements ActionListener {
 				
 					Piste p = new Piste(numero, titre, duree);
 					listPistes.add(p);
-					for(Piste p2 : listPistes)
-						System.out.println(p2.getTitre());
+	
 					// MAJ de la JList
-					super.listModel.addElement(p.getNumero()+" - "+p.getTitre());
-
+					super.refreshLstDvdOuPiste();
+					
 					pack();
 				}
 			}
 			else {
-				throw new IllegalArgumentException("La classe doit être de type CoffretDvd ou Cd");
+				throw new IllegalArgumentException("La classe doit être de type CoffretDvd, Cd ou AudioLivre");
 			}
 		
 		}

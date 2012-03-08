@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
 
 import controleur.Bibliotheque;
 
+import modèle.AudioLivre;
 import modèle.Cd;
 import modèle.CoffretDvd;
 import modèle.Dvd;
@@ -48,19 +49,21 @@ public abstract class BiblioDialog extends JDialog implements ActionListener {
 	protected JButton btnAnnuler;
 	protected DefaultListModel listModel;
 	protected JList lstDvdOuPiste;
-	protected JButton btnAjoutDvdOuPiste; // Pour les CD ou les DVD
+	protected JButton btnAjoutDvdOuPiste; // Pour les CD et les DVD
 	protected JButton btnSupprDvdOuPiste;
 	protected List<Dvd> listDvds;
 	protected List<Piste> listPistes;
 	protected TextForm form;
 	protected String[] labels;
 	protected Class<?> typeObj;
+	protected boolean save; // Sauvegarde directement ou non l'objet (eg : un DVD dans un coffret DVD ne doit pas être ajouté dans la base puisqu'il s'ajoute dans listDvds)
 	
-	public BiblioDialog(String titreFrame, JDialog parent, Class<?> typeObj) {
+	public BiblioDialog(String titreFrame, JDialog parent, Class<?> typeObj, boolean save) {
 		super(parent, titreFrame, true);
 		
 		this.typeObj = typeObj;
-		
+		this.save = save;
+
 		buildInterface();
 		
 		buildEvents();
@@ -91,11 +94,11 @@ public abstract class BiblioDialog extends JDialog implements ActionListener {
 		container.add(form, BorderLayout.NORTH);
 		
 
-		// Bouton ajouter Dvd ou ajouter Piste et label pour afficher la liste
+		// Bouton ajouter Dvd ou ajouter Piste ou ajouter Cd et label pour afficher la liste
 		this.btnAjoutDvdOuPiste = new JButton();
 		this.btnSupprDvdOuPiste = new JButton("Supprimer la sélection");
 		
-		if(typeObj == CoffretDvd.class || typeObj == Cd.class) {
+		if(typeObj == CoffretDvd.class || typeObj == Cd.class || typeObj == AudioLivre.class) {
 
 			JPanel panAjoutDvdOuPiste = new JPanel(new BorderLayout());
 			JPanel panButtons = new JPanel();
@@ -114,12 +117,12 @@ public abstract class BiblioDialog extends JDialog implements ActionListener {
 		
 			container.add(panAjoutDvdOuPiste);			
 			
-			if(typeObj == CoffretDvd.class) {
+			if(typeObj == CoffretDvd.class)
 				this.btnAjoutDvdOuPiste.setText("Ajouter des DVD au coffret");
-			}
-			else if(typeObj == Cd.class) {
+			else if(typeObj == Cd.class)
 				this.btnAjoutDvdOuPiste.setText("Ajout des pistes au CD");
-			}
+			else if(typeObj == AudioLivre.class)
+				this.btnAjoutDvdOuPiste.setText("Ajout des pistes à l'audiolivre");
 		}
 		
 		setContentPane(container);
@@ -150,7 +153,7 @@ public abstract class BiblioDialog extends JDialog implements ActionListener {
 			else {
 				if(typeObj == CoffretDvd.class)
 					listDvds.remove(index);
-				else if(typeObj == Cd.class)
+				else if(typeObj == Cd.class || typeObj == AudioLivre.class)
 					listPistes.remove(index);
 				
 				refreshLstDvdOuPiste();
@@ -158,16 +161,13 @@ public abstract class BiblioDialog extends JDialog implements ActionListener {
 		}
 	}
 	
-	// Remplissage de la JList pour les coffrets DVD ou les CD
+	// Remplissage de la JList pour les coffrets DVD, les CD ou les AudioLivre (meme traitement pour CD et AudioLivre)
 	public void refreshLstDvdOuPiste() {
 		listModel.clear();
 		
 		if(listDvds != null && !listDvds.isEmpty()) {
-			System.out.println("TAILLE DVDS : "+listDvds.size());
-			for(Dvd d : listDvds) {
-				System.out.println(d.getTitre());
+			for(Dvd d : listDvds)
 				listModel.addElement(d.getTitre());
-			}
 		}
 		else if(listPistes != null && !listPistes.isEmpty()) {
 			for(Piste p : listPistes)

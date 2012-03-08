@@ -14,7 +14,7 @@ public class Database {
 
 	private ObjectContainer db = null;
 	private EmbeddedConfiguration config;
-	private static final String PATH_DATABASE = "bibliotheque0017.db4o";
+	private static final String PATH_DATABASE = "biblio4000.db4o";
 	
 	/**
 	 * Configuration et ouverture de la base
@@ -25,11 +25,13 @@ public class Database {
 		// La mise à jour en cascade permet de mettre à jour les objets créés dans des objets
         config.common().objectClass(Media.class).cascadeOnUpdate(true);
         config.common().objectClass(Membre.class).cascadeOnUpdate(true);
-        config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
+    //    config.common().objectClass(Emprunt.class).cascadeOnUpdate(true);
         config.common().objectClass(Cd.class).cascadeOnUpdate(true);
         config.common().objectClass(CoffretDvd.class).cascadeOnUpdate(true);
+        config.common().objectClass(AudioLivre.class).cascadeOnUpdate(true);
         config.common().objectClass(Cd.class).cascadeOnDelete(true);
         config.common().objectClass(CoffretDvd.class).cascadeOnDelete(true);
+        config.common().objectClass(AudioLivre.class).cascadeOnDelete(true);
         
         db = Db4oEmbedded.openFile(config, PATH_DATABASE); // Ouvre ou créé et ouvre la base
 	}

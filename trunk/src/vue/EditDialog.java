@@ -25,8 +25,8 @@ public class EditDialog extends BiblioDialog implements ActionListener {
 
 	private Object objectToEdit;
 	
-	public EditDialog(String titreFrame, Object objectToEdit) {
-		super(titreFrame, null, objectToEdit.getClass());
+	public EditDialog(String titreFrame, Object objectToEdit, boolean save) {
+		super(titreFrame, null, objectToEdit.getClass(), save);
 
 		this.objectToEdit = objectToEdit;
 		
@@ -46,6 +46,8 @@ public class EditDialog extends BiblioDialog implements ActionListener {
 		else if(this.objectToEdit instanceof AudioLivre) {
 			AudioLivre o = (AudioLivre) this.objectToEdit;
 			form.presetFieldValues(new String[]{o.getIsbn(), o.getAuteur(), o.getTitre(), o.getStringDateParution(), String.valueOf(o.getNbPages())});
+			listPistes = o.getPistes();
+			super.refreshLstDvdOuPiste();
 		}
 		else if(this.objectToEdit instanceof Cd) {
 			Cd o = (Cd) this.objectToEdit;
@@ -155,73 +157,74 @@ public class EditDialog extends BiblioDialog implements ActionListener {
 				JOptionPane.showMessageDialog(this, "Veuillez remplir correctement tout les champs","Erreur", JOptionPane.ERROR_MESSAGE);
 			}
 			else { // On met à jour les champs de l'objet et on le met à jour dans la base
-				if(this.objectToEdit instanceof Abonne) {
-					Abonne a = (Abonne) objectToEdit;
-					a.setNom(nom);
-					a.setPrenom(prenom);
-					a.setDateNaissance(dateNaiss);
-					Bibliotheque.updateObject(a);
+				if(super.save) {
+					if(this.objectToEdit instanceof Abonne) {
+						Abonne a = (Abonne) objectToEdit;
+						a.setNom(nom);
+						a.setPrenom(prenom);
+						a.setDateNaissance(dateNaiss);
+						Bibliotheque.updateObject(a);
+					}
+					else if(this.objectToEdit instanceof Personnel) {
+						Personnel p = (Personnel) objectToEdit;
+						p.setNom(nom);
+						p.setPrenom(prenom);
+						p.setDateNaissance(dateNaiss);
+						p.setPoste(poste);
+						Bibliotheque.updateObject(p);
+					}
+					else if(this.objectToEdit instanceof AudioLivre) {
+						AudioLivre ad = (AudioLivre) objectToEdit;
+						ad.setAuteur(auteur);
+						ad.setDateParution(dateParution);
+						ad.setNbPages(nbPages);
+						ad.setPistes(listPistes);
+						ad.setTitre(titre);
+						Bibliotheque.updateObject(ad);
+					}
+					else if(this.objectToEdit instanceof Cd) {
+						Cd cd = (Cd) objectToEdit;
+						cd.setAuteur(auteur);
+						cd.setDateParution(dateParution);
+						cd.setTitre(titre);
+						cd.setPistes(listPistes);
+						Bibliotheque.updateObject(cd);
+					}
+					else if(this.objectToEdit instanceof CoffretDvd) {
+						CoffretDvd cof = (CoffretDvd) objectToEdit;
+						cof.setAuteur(auteur);
+						cof.setDateParution(dateParution);
+						cof.setDvds(listDvds);
+						cof.setTitre(titre);
+						cof.setDvds(listDvds);
+						Bibliotheque.updateObject(cof);
+					}
+					else if(this.objectToEdit instanceof Dvd) {
+						Dvd d = (Dvd) objectToEdit;
+						d.setAuteur(auteur);
+						d.setDateParution(dateParution);
+						d.setDuree(duree);
+						d.setTitre(titre);
+						Bibliotheque.updateObject(d);
+					}
+					else if(this.objectToEdit instanceof Livre) {
+						Livre l = (Livre) objectToEdit;
+						l.setAuteur(auteur);
+						l.setDateParution(dateParution);
+						l.setNbPages(nbPages);
+						l.setTitre(titre);
+						Bibliotheque.updateObject(l);
+					}
+					else if(this.objectToEdit instanceof Magazine) {
+						Magazine m = (Magazine) objectToEdit;
+						m.setAuteur(auteur);
+						m.setDateParution(dateParution);
+						m.setModeParution(modeParution);
+						m.setNbPages(nbPages);
+						m.setTitre(titre);
+						Bibliotheque.updateObject(m);
+					}
 				}
-				else if(this.objectToEdit instanceof Personnel) {
-					Personnel p = (Personnel) objectToEdit;
-					p.setNom(nom);
-					p.setPrenom(prenom);
-					p.setDateNaissance(dateNaiss);
-					p.setPoste(poste);
-					Bibliotheque.updateObject(p);
-				}
-				else if(this.objectToEdit instanceof AudioLivre) {
-					AudioLivre ad = (AudioLivre) objectToEdit;
-					ad.setAuteur(auteur);
-					ad.setDateParution(dateParution);
-					ad.setNbPages(nbPages);
-					ad.setPistes(listPistes);
-					ad.setTitre(titre);
-					Bibliotheque.updateObject(ad);
-				}
-				else if(this.objectToEdit instanceof Cd) {
-					Cd cd = (Cd) objectToEdit;
-					cd.setAuteur(auteur);
-					cd.setDateParution(dateParution);
-					cd.setTitre(titre);
-					cd.setPistes(listPistes);
-					Bibliotheque.updateObject(cd);
-				}
-				else if(this.objectToEdit instanceof CoffretDvd) {
-					CoffretDvd cof = (CoffretDvd) objectToEdit;
-					cof.setAuteur(auteur);
-					cof.setDateParution(dateParution);
-					cof.setDvds(listDvds);
-					cof.setTitre(titre);
-					cof.setDvds(listDvds);
-					Bibliotheque.updateObject(cof);
-				}
-				else if(this.objectToEdit instanceof Dvd) {
-					Dvd d = (Dvd) objectToEdit;
-					d.setAuteur(auteur);
-					d.setDateParution(dateParution);
-					d.setDuree(duree);
-					d.setTitre(titre);
-					Bibliotheque.updateObject(d);
-				}
-				else if(this.objectToEdit instanceof Livre) {
-					Livre l = (Livre) objectToEdit;
-					l.setAuteur(auteur);
-					l.setDateParution(dateParution);
-					l.setNbPages(nbPages);
-					l.setTitre(titre);
-					Bibliotheque.updateObject(l);
-				}
-				else if(this.objectToEdit instanceof Magazine) {
-					Magazine m = (Magazine) objectToEdit;
-					m.setAuteur(auteur);
-					m.setDateParution(dateParution);
-					m.setModeParution(modeParution);
-					m.setNbPages(nbPages);
-					m.setTitre(titre);
-					Bibliotheque.updateObject(m);
-				}
-
 				retStatus = BiblioDialog.RET_OK;
 				
 				dispose(); // On ferme la fenetre
@@ -231,7 +234,7 @@ public class EditDialog extends BiblioDialog implements ActionListener {
 		// Ajout des pistes dans un CD ou ajout de DVD dans un coffret DVD
 		else if(e.getSource() == btnAjoutDvdOuPiste) {
 			if(this.typeObj == CoffretDvd.class) {
-				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class);
+				AjoutDialog frameDvd = new AjoutDialog("Ajouter des DVD au coffret", Dvd.class, false);
 				frameDvd.setVisible(true);
 				
 				if(frameDvd.getReturnStatus() == BiblioDialog.RET_OK) {
@@ -259,7 +262,7 @@ public class EditDialog extends BiblioDialog implements ActionListener {
 				
 			}
 			else if(this.typeObj == Cd.class) {
-				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class);
+				AjoutDialog framePiste = new AjoutDialog("Ajouter des pistes au CD", Piste.class, false);
 				framePiste.setVisible(true);
 				
 				if(framePiste.getReturnStatus() == BiblioDialog.RET_OK) {
