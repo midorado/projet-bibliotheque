@@ -1,4 +1,4 @@
-package modèle;
+package modele;
 import java.util.Date;
 
 
@@ -10,7 +10,6 @@ public class Livre extends Litteraire {
 			Date uneDateParrution, int unNbPages) {
 		super(unIsbn, unAuteur, unTitre, uneDateParrution, unNbPages);
 		this.enLecture = false;
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

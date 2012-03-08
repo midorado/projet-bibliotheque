@@ -16,7 +16,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import modèle.*;
+import modele.*;
 
 import controleur.Bibliotheque;
 
@@ -67,9 +67,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		pnlActionButtons.add(btnSupprimer);
 		pnlActionButtons.add(btnLecture);
 	
-		// Ajout des bordures vides autour des composants
-		pnlOnglet.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0), btnEmprunter.getBorder()));
-		comboItems.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(), btnEmprunter.getBorder()));
+		// Ajout des bordures vides autour des composants (GENERE UNE EXCEPTION SOUS LINUX)
+		// pnlOnglet.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0), btnEmprunter.getBorder()));
+		// comboItems.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(), btnEmprunter.getBorder()));
 		
 		// Ajout des composants dans les panels
 		JPanel pnlButtons = new JPanel(new BorderLayout());

@@ -8,19 +8,19 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import modèle.Abonne;
-import modèle.AudioLivre;
-import modèle.Cd;
-import modèle.CoffretDvd;
-import modèle.Database;
-import modèle.Dvd;
-import modèle.Emprunt;
-import modèle.Livre;
-import modèle.Magazine;
-import modèle.Media;
-import modèle.Membre;
-import modèle.Personnel;
-import modèle.Piste;
+import modele.Abonne;
+import modele.AudioLivre;
+import modele.Cd;
+import modele.CoffretDvd;
+import modele.Database;
+import modele.Dvd;
+import modele.Emprunt;
+import modele.Livre;
+import modele.Magazine;
+import modele.Media;
+import modele.Membre;
+import modele.Personnel;
+import modele.Piste;
 
 /**
  * 
