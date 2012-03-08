@@ -76,10 +76,7 @@ public abstract class Membre {
 	public void addEmprunt(Emprunt e) {
 		this.emprunts.add(e);
 	}
-	public String getFullStringDateNaissance() {
-		DateFormat formatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.FRENCH);
-		return formatter.format(dateNaissance);
-	}
+
 	public String getStringDateNaissance() {
 		SimpleDateFormat pat = new SimpleDateFormat("dd/MM/yyyy", Locale.FRENCH);
 		return pat.format(dateNaissance);

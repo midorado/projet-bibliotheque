@@ -1,19 +1,15 @@
 package vue;
 
 import java.awt.BorderLayout;
-import java.awt.ItemSelectable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -28,7 +24,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
   
 	String[] firstItem = {"Livre", "Abonné", "En cours", "En lecture"};
 	JTabbedPane pnlOnglet;
-	JComboBox listeItems;
+	JComboBox comboItems;
 	ListePanel pnlData;
 	JPanel pnlActionButtons;
 	JButton btnEmprunter;
@@ -38,7 +34,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 	JButton btnLecture;
 	
 	public MainFrame() {
-		super("Bibliothèque 4000 !!");
+		super("Biblio 4000 !!!");
 		
 		buildInterface();
 		buildEvents();
@@ -50,7 +46,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		this.setSize(400, 200);
 		
 		pnlOnglet = new JTabbedPane();
-		listeItems = new JComboBox<String>();
+		comboItems = new JComboBox<String>();
 		setItemsComboBox(firstItem[0]);
 		
 		pnlData = new ListePanel(Bibliotheque.getListLivre()); // Par défaut au démarrage de l'appli
@@ -70,12 +66,17 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		pnlActionButtons.add(btnModifier);
 		pnlActionButtons.add(btnSupprimer);
 		pnlActionButtons.add(btnLecture);
+	
+		// Ajout des bordures vides autour des composants
+		pnlOnglet.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0), btnEmprunter.getBorder()));
+		comboItems.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(), btnEmprunter.getBorder()));
 		
+		// Ajout des composants dans les panels
 		JPanel pnlButtons = new JPanel(new BorderLayout());
 		pnlButtons.add(btnEmprunter, BorderLayout.NORTH);
 		pnlButtons.add(pnlActionButtons, BorderLayout.CENTER);
-		
-		pnlData.add(listeItems, BorderLayout.NORTH);
+
+		pnlData.add(comboItems, BorderLayout.NORTH);
 		
 		this.add(pnlOnglet);
 		this.add(pnlButtons,BorderLayout.SOUTH);
@@ -85,7 +86,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 	
 	public void buildEvents() {
 		pnlOnglet.addChangeListener(this); // Pour le rafraichissement lors d'un changement d'onglet
-		listeItems.addActionListener(this);
+		comboItems.addActionListener(this);
 		btnAjouter.addActionListener(this);
 		btnSupprimer.addActionListener(this);
 		btnModifier.addActionListener(this);
@@ -105,7 +106,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		String selectedItem = (String) this.listeItems.getSelectedItem();
+		String selectedItem = (String) this.comboItems.getSelectedItem();
 		int selectedIndex = this.pnlOnglet.getSelectedIndex();
 		int selectedRow = pnlData.getTable().getSelectedRow();
 		
@@ -130,24 +131,24 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 			if(selectedIndex == 0) {
 				
 				if(selectedItem.equals("Livre"))
-					ajd = new AjoutDialog("Ajouter un livre", Livre.class);					
+					ajd = new AjoutDialog("Ajouter un livre", Livre.class, true);					
 				else if(selectedItem.equals("Magazine"))
-					ajd = new AjoutDialog("Ajouter un magazine", Magazine.class);
+					ajd = new AjoutDialog("Ajouter un magazine", Magazine.class, true);
 				else if(selectedItem.equals("CD"))
-					ajd = new AjoutDialog("Ajouter un CD", Cd.class);
+					ajd = new AjoutDialog("Ajouter un CD", Cd.class, true);
 				else if(selectedItem.equals("DVD"))
-					ajd = new AjoutDialog("Ajouter un DVD", Dvd.class);
+					ajd = new AjoutDialog("Ajouter un DVD", Dvd.class, true);
 				else if(selectedItem.equals("Coffret DVD"))
-					ajd = new AjoutDialog("Ajouter un coffret DVD", CoffretDvd.class);
+					ajd = new AjoutDialog("Ajouter un coffret DVD", CoffretDvd.class, true);
 				else if(selectedItem.equals("AudioLivre"))
-					ajd = new AjoutDialog("Ajouter un audiolivre", AudioLivre.class);
+					ajd = new AjoutDialog("Ajouter un audiolivre", AudioLivre.class, true);
 			}
 			// Membre
 			else if(selectedIndex == 1) {
 				if(selectedItem == "Abonné")
-					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class);
+					ajd = new AjoutDialog("Ajouter un abonné", Abonne.class, true);
 				else if(selectedItem == "Personnel")
-					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class);
+					ajd = new AjoutDialog("Ajouter un membre du personnel", Personnel.class, true);
 			}
 			
 			if(selectedIndex == 0 || selectedIndex == 1) {
@@ -172,17 +173,17 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				Media m = Bibliotheque.getMediaByIsbn(isbn);
 
 				if(selectedItem.equals("Livre"))
-					ajd = new EditDialog("Modifier un livre", m);					
+					ajd = new EditDialog("Modifier un livre", m, true);					
 				else if(selectedItem.equals("Magazine"))
-					ajd = new EditDialog("Modifier un magazine", m);
+					ajd = new EditDialog("Modifier un magazine", m, true);
 				else if(selectedItem.equals("CD"))
-					ajd = new EditDialog("Modifier un CD", m);
+					ajd = new EditDialog("Modifier un CD", m, true);
 				else if(selectedItem.equals("DVD"))
-					ajd = new EditDialog("Modifier un DVD", m);
+					ajd = new EditDialog("Modifier un DVD", m, true);
 				else if(selectedItem.equals("Coffret DVD"))
-					ajd = new EditDialog("Modifier un coffret DVD", m);
+					ajd = new EditDialog("Modifier un coffret DVD", m, true);
 				else if(selectedItem.equals("AudioLivre"))
-					ajd = new EditDialog("Modifier un audiolivre", m);
+					ajd = new EditDialog("Modifier un audiolivre", m, true);
 
 			}
 			// Membre
@@ -191,9 +192,9 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				Membre m = Bibliotheque.getMembreById(id);
 				
 				if(selectedItem == "Abonné")
-					ajd = new EditDialog("Ajouter un abonné", m);
+					ajd = new EditDialog("Ajouter un abonné", m, true);
 				else if(selectedItem == "Personnel")
-					ajd = new EditDialog("Ajouter un membre du personnel", m);
+					ajd = new EditDialog("Ajouter un membre du personnel", m, true);
 			}
 			
 			if(selectedIndex == 0 || selectedIndex == 1) {
@@ -254,7 +255,7 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 		/* ===== Bouton LECTURE ===== */
 		if(e.getSource() == btnLecture) {
 
-			if(listeItems.isVisible()) {
+			if(comboItems.isVisible()) {
 				if(!selectedItem.equals("Livre") && !selectedItem.equals("Cd")) {
 					JOptionPane.showConfirmDialog(this, "Vous ne pouvez pas lancer de lecture sur ce type de média", "Lecture impossible", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 				}
@@ -288,13 +289,13 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 					Bibliotheque.updateMedia(cd);
 				}
 				
-				if(!listeItems.isVisible())
+				if(!comboItems.isVisible())
 					refreshComponents("En lecture");
 			}
 		}
 		
 		/* ===== Changement de sélection d'un item ===== */
-		if(e.getSource() == listeItems) {
+		if(e.getSource() == comboItems) {
 			if(selectedItem != null) {
 				refreshComponents(selectedItem);
 			}
@@ -329,28 +330,28 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 				btnModifier.setVisible(true);
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(true);
-				listeItems.setVisible(true);
+				comboItems.setVisible(true);
 				btnEmprunter.setVisible(true);
 			break;
 		case 1: btnAjouter.setVisible(true);
 				btnModifier.setVisible(true);
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(false);
-				listeItems.setVisible(true);
+				comboItems.setVisible(true);
 				btnEmprunter.setVisible(false);
 			break;
 		case 2: btnAjouter.setVisible(false);
 				btnModifier.setVisible(false);
 				btnSupprimer.setVisible(true);
 				btnLecture.setVisible(false);
-				listeItems.setVisible(true);
+				comboItems.setVisible(true);
 				btnEmprunter.setVisible(false);
 			break;
 		case 3: btnAjouter.setVisible(false);
 				btnModifier.setVisible(false);
 				btnSupprimer.setVisible(false);
 				btnLecture.setVisible(true);
-				listeItems.setVisible(false);
+				comboItems.setVisible(false);
 				btnEmprunter.setVisible(false);
 			break;
 		}
@@ -418,23 +419,23 @@ public class MainFrame extends JFrame implements ActionListener, ChangeListener 
 	}
 	
 	private void setItemsComboBox(String firstItem) {
-		listeItems.removeAllItems();
+		comboItems.removeAllItems();
 		
 		if(firstItem.equals("Livre")) {
-			listeItems.addItem("Livre");
-			listeItems.addItem("Magazine");
-			listeItems.addItem("CD");
-			listeItems.addItem("DVD");
-			listeItems.addItem("Coffret DVD");
-			listeItems.addItem("AudioLivre");
+			comboItems.addItem("Livre");
+			comboItems.addItem("Magazine");
+			comboItems.addItem("CD");
+			comboItems.addItem("DVD");
+			comboItems.addItem("Coffret DVD");
+			comboItems.addItem("AudioLivre");
 		}
 		else if(firstItem.equals("Abonné")) {
-			listeItems.addItem("Abonné");
-			listeItems.addItem("Personnel");
+			comboItems.addItem("Abonné");
+			comboItems.addItem("Personnel");
 		}
 		else if(firstItem.equals("En cours")) {
-			listeItems.addItem("En cours");
-			listeItems.addItem("Terminés");
+			comboItems.addItem("En cours");
+			comboItems.addItem("Terminés");
 		}
 	}
 }

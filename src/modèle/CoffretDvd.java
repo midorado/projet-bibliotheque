@@ -32,7 +32,7 @@ public class CoffretDvd extends AudioVisuel {
 	
 	@Override
 	public float getPrix() {
-		return 0;
+		return 10*getNbDvds();
 	}
 
 	/* ****************Debut Get Set******************* */

@@ -45,6 +45,21 @@ public class ListePanel extends JPanel {
 		}
 		else {
 			// Médias
+			if(listeData.get(0) instanceof AudioLivre) {
+				mesDonnees = new String[listeData.size()][Bibliotheque.getLabelValues(AudioLivre.class, false).length];
+				List<AudioLivre> data = (List<AudioLivre>) listeData;
+
+				for(int i = 0; i < listeData.size(); i++) {		
+						mesDonnees[i][0] = data.get(i).getIsbn();
+						mesDonnees[i][1] = data.get(i).getAuteur();
+						mesDonnees[i][2] = data.get(i).getTitre();
+						mesDonnees[i][3] = data.get(i).getFullStringDateParution();
+						mesDonnees[i][4] = String.valueOf(data.get(i).getNbPages());
+						mesDonnees[i][5] = String.valueOf(data.get(i).getDuree());
+						mesDonnees[i][6] = String.valueOf(data.get(i).getPrix());
+				}
+				mesLabels = Bibliotheque.getLabelValues(AudioLivre.class, false);
+			}
 			if(listeData.get(0) instanceof Livre) {
 				
 				mesDonnees = new String[listeData.size()][Bibliotheque.getLabelValues(Livre.class, false).length];
@@ -136,7 +151,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = String.valueOf(data.get(i).getIdentifiant());
 						mesDonnees[i][1] = data.get(i).getNom();
 						mesDonnees[i][2] = data.get(i).getPrenom();
-						mesDonnees[i][3] = data.get(i).getDateNaissance().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getStringDateNaissance();
 						mesDonnees[i][4] = String.valueOf(data.get(i).getTauxReduction());
 				}
 				mesLabels = Bibliotheque.getLabelValues(Abonne.class, false);
@@ -151,7 +166,7 @@ public class ListePanel extends JPanel {
 						mesDonnees[i][0] = String.valueOf(data.get(i).getIdentifiant());
 						mesDonnees[i][1] = data.get(i).getNom();
 						mesDonnees[i][2] = data.get(i).getPrenom();
-						mesDonnees[i][3] = data.get(i).getDateNaissance().toLocaleString();
+						mesDonnees[i][3] = data.get(i).getStringDateNaissance();
 						mesDonnees[i][4] = data.get(i).getPoste();
 						mesDonnees[i][5] = String.valueOf(data.get(i).getTauxReduction());
 				}
@@ -165,10 +180,22 @@ public class ListePanel extends JPanel {
 				List<Emprunt> data = (List<Emprunt>) listeData;
 				
 				for(int i = 0; i < listeData.size(); i++) {	
-						mesDonnees[i][0] = data.get(i).getMedia().getIsbn();
-						mesDonnees[i][1] = data.get(i).getMedia().getTitre();
-						mesDonnees[i][2] = String.valueOf(data.get(i).getMembre().getIdentifiant());
-						mesDonnees[i][3] = data.get(i).getMembre().getNom() +" "+ data.get(i).getMembre().getPrenom();
+						if(data.get(i).getMedia() != null) {
+							mesDonnees[i][0] = data.get(i).getMedia().getIsbn();
+							mesDonnees[i][1] = data.get(i).getMedia().getTitre();
+						}
+						else {
+							mesDonnees[i][0] = "Média supprimé";
+							mesDonnees[i][1] = "Média supprimé";
+						}
+						if(data.get(i).getMembre() != null) {
+							mesDonnees[i][2] = String.valueOf(data.get(i).getMembre().getIdentifiant());
+							mesDonnees[i][3] = data.get(i).getMembre().getNom() +" "+ data.get(i).getMembre().getPrenom();
+						}
+						else {
+							mesDonnees[i][2] = "Membre supprimé";
+							mesDonnees[i][3] = "Membre supprimé";
+						}
 						mesDonnees[i][4] = data.get(i).getDateEmprunt().toLocaleString();
 						mesDonnees[i][5] = data.get(i).getDateLimiteRetour().toLocaleString();
 

@@ -82,10 +82,6 @@ public class Bibliotheque {
 		return db.getMediaByIsbn(isbn);
 	}
 	
-/*	public static void addEmprunt(Emprunt e) {
-		db.storeObject(e);
-	}
-*/
 	public static boolean nouvelEmprunt(String isbn, int memberId) {
 		Membre mb = getMembreById(memberId);
 		Media med = getMediaByIsbn(isbn);
@@ -168,7 +164,13 @@ public class Bibliotheque {
 	}
 	
 	public static int getNouvelIdMembre() {
-		return db.getList(Membre.class).size() + 1;
+		int newID = 1;
+		List<Membre> membres = (List<Membre>) db.getList(Membre.class);
+		
+		if(membres != null && !membres.isEmpty())
+			newID = membres.get(membres.size()-1).getIdentifiant() + 1;
+		
+		return newID;
 	}
 	
 	public static List<Media> getListMediasEnLecture() {
@@ -259,7 +261,7 @@ public class Bibliotheque {
 		}
 		else if(typeObj == AudioLivre.class) {
 			if(!editable)
-				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages","Prix"};
+				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages", "Durée", "Prix"};
 			else
 				return new String[]{"ISBN", "Auteur", "Titre", "Date de parution", "Nombre de pages"};
 		}

@@ -22,7 +22,7 @@ public class Cd extends AudioVisuel {
 		float prix = 10;
 		
 		if(this.getNbPistes() > 10)
-			prix += getNbPistes() * 1;
+			prix += getNbPistes() * 1; // 1€ la piste supplémentaire
 		
 		return prix;
 	}

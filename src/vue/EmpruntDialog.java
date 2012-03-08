@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 
 import modèle.Media;
 import modèle.Membre;
@@ -114,48 +113,23 @@ public class EmpruntDialog extends JDialog implements ActionListener {
 			int selectedIndex = comboResultMembre.getSelectedIndex();
 	
 			if(selectedIndex != -1) {
-				int idMembre = resultMembres.get(selectedIndex).getIdentifiant();
+				Membre membre = resultMembres.get(selectedIndex);
+				int idMembre = membre.getIdentifiant();
+				
 				// On vérifie que le média n'est pas en cours d'emprunt ou d'écoute/lecture
 				if(!Bibliotheque.isEmpruntable(media.getIsbn())) {
 					JOptionPane.showConfirmDialog(this, "Le média est déjà en cours d'emprunt ou en cours d'écoute", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
 				}
-				else if(Bibliotheque.nouvelEmprunt(media.getIsbn(), idMembre)) { // Tout est OK en principe !
+				else { // Tout est OK en principe !
+					// On informe du prix du l'emprunt
+					float prix = media.getPrix() - (media.getPrix() * membre.getTauxReduction()); // On applique la réduction
+					JOptionPane.showConfirmDialog(this, "Le tarif du prêt est de "+prix+"€", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					// On créé un nouvel emprunt
+					Bibliotheque.nouvelEmprunt(media.getIsbn(), idMembre);
 					this.retStatus = BiblioDialog.RET_OK; 	// On informe la frame parente que tout est OK
 					this.dispose();
 				}
-				else {	
-					System.out.println("Emprunt impossible... WHY ???");
-				}
 			}
-		//	int id = -1
-		/*	// On récupère les champs
-			String isbn = form.getFieldText(0);
-			int id = -1;
-			
-			try {
-				id = Integer.parseInt(form.getFieldText(1));
-				
-				// On test si le média et le membre existent bien
-				if(!Bibliotheque.mediaExists(isbn) || !Bibliotheque.membreExists(id)) {
-					JOptionPane.showConfirmDialog(this, "Le membre ou le média n'existe pas", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
-				}
-				else {
-					// On vérifie que le média n'est pas en cours d'emprunt ou d'écoute/lecture
-					if(!Bibliotheque.isEmpruntable(isbn)) {
-						JOptionPane.showConfirmDialog(this, "Le média est déjà en cours d'emprunt ou en cours d'écoute", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
-					}
-					else if(Bibliotheque.nouvelEmprunt(isbn, id)) { // Tout est OK en principe !
-						this.retStatus = BiblioDialog.RET_OK; 	// On informe la frame parente que tout est OK
-						this.dispose();
-					}
-					else {	
-						System.out.println("Emprunt impossible... WHY ???");
-					}
-				}
-			}
-			catch(NumberFormatException nfe) {
-				JOptionPane.showConfirmDialog(this, "L'identifiant du membre doit être un nombre", "Erreur", JOptionPane.CLOSED_OPTION, JOptionPane.ERROR_MESSAGE);
-			}	*/			
 		}
 	}
 }
